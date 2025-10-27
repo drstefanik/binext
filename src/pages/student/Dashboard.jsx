@@ -1,0 +1,1 @@
+export default function StudentDashboard(){ return <div className="rounded-2xl border bg-white p-4">Benvenuto! Qui vedrai i tuoi materiali BI NEXT.</div> }
