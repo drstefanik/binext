@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { at } from "../../lib/airtable.js";
 function genCode(name){
   const norm = name.replace(/[^A-Z0-9]/gi,'').toUpperCase();

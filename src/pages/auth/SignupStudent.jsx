@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { at } from "../../lib/airtable.js";
 export default function SignupStudent(){
   const [code, setCode] = useState("");

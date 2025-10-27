@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { at } from "../../lib/airtable.js";
 function genOTP(){ return Math.floor(100000+Math.random()*900000).toString(); }
 export default function AdminSchools(){
