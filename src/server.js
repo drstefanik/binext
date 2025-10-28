@@ -17,23 +17,35 @@ app.post("/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Admin
-    let user = await findAdminByEmail(email);
-    if (user && user.status === "active" && await comparePassword(password, user.password_hash)) {
-      return res.json({ token: signJWT({ role: "admin", id: user.id, email: user.email }), role: "admin", name: user.full_name });
-    }
+    const tryLogin = async (user, role, nameField, extra = {}) => {
+      if (!user) return false;
+      if (user.status !== "active") {
+        res.status(423).json({ error: "Utente disabilitato" });
+        return true;
+      }
+      if (!(await comparePassword(password, user.password_hash))) {
+        return false;
+      }
 
-    // School
-    user = await findSchoolByEmail(email);
-    if (user && user.status === "active" && await comparePassword(password, user.password_hash)) {
-      return res.json({ token: signJWT({ role: "school", id: user.id, email: user.email }), role: "school", name: user.name });
-    }
+      const sanitizedExtra = Object.fromEntries(
+        Object.entries(extra).filter(([, value]) => value !== undefined)
+      );
+      const payload = { role, id: user.id, email: user.email, ...sanitizedExtra };
 
-    // Student
-    user = await findStudentByEmail(email);
-    if (user && user.status === "active" && await comparePassword(password, user.password_hash)) {
-      return res.json({ token: signJWT({ role: "student", id: user.id, email: user.email, schoolId: user.school?.[0] }), role: "student", name: user.full_name });
-    }
+      res.json({
+        token: signJWT(payload),
+        role,
+        id: user.id,
+        name: user[nameField],
+        ...sanitizedExtra,
+      });
+      return true;
+    };
+
+    if (await tryLogin(await findAdminByEmail(email), "admin", "full_name")) return;
+    if (await tryLogin(await findSchoolByEmail(email), "school", "name")) return;
+    const student = await findStudentByEmail(email);
+    if (await tryLogin(student, "student", "full_name", { schoolId: student?.school?.[0] })) return;
 
     return res.status(401).json({ error: "Email o password non valide" });
   } catch (e) {
