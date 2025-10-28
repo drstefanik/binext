@@ -1,9 +1,20 @@
+/* Injected: network background + particles */
+import Particles from '../components/Particles.jsx';
 
 import React from "react"; import { Link } from "react-router-dom"; import { motion } from "framer-motion";
 import Particles from "../components/Particles.jsx"; import nextLogo from "../assets/NEXT2.2BG.png";
 import logoBI from "../assets/BRITISH INSTITUTES INTERNATIONAL SCHOOL.png"; import illStudent from "../assets/illustration-student.svg";
 const card=(d=0)=>({initial:{opacity:0,y:20,scale:.98},whileInView:{opacity:1,y:0,scale:1},transition:{duration:.5,delay:d},viewport:{once:true,amount:.6}});
-export default function Home(){ return (<div className="relative">
+export default function Home(){
+  // Background layers
+  const BG = () => (
+    <>
+      <div className='absolute inset-0 -z-20 bg-hero-gradient'></div>
+      <div className='absolute inset-0 -z-10 bg-network bg-cover bg-center opacity-60'></div>
+      <div className='relative'><Particles density={90}/></div>
+    </>
+  );
+ return (<div className="relative">
   <section className="relative"><div className="absolute inset-0 -z-10 bg-hero-gradient"></div><div className="absolute inset-0 z-0"><Particles density={90}/></div>
     <div className="relative z-10 mx-auto max-w-7xl px-4 pt-16 pb-12 text-center">
       <motion.div initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:.6}} className="flex flex-col items-center gap-6">
