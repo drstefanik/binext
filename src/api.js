@@ -1,4 +1,4 @@
-const API = import.meta.env.VITE_AUTH_API
+const API = import.meta.env.VITE_AUTH_API ?? '/api'
 
 export class ApiError extends Error {
   constructor(message, status, payload) {
