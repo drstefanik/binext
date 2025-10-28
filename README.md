@@ -1,20 +1,12 @@
-# BI NEXT Frontend v3 (Tailwind)
+# BI NEXT Frontend v5.2 — User Home + Tailwind
 
-- Tailwind + PostCSS inclusi
-- Home su `/`, Login su `/login`
-- SPA rewrites: `vercel.json`
-- Env: `VITE_AUTH_API`
+- Home.jsx: il tuo file
+- Tailwind + PostCSS + framer-motion
+- Particles.jsx incluso
+- Asset placeholder validi in `src/assets/`
+- Rotte: `/`, `/login`, `/signup-school`, `/signup-student`
 
 ## Setup
-```bash
 npm install
 cp .env.example .env
-npm run dev
-npm run build
-npm run preview
-```
-
-## Vercel
-- Build: `npm run build`
-- Output: `dist`
-- Env: `VITE_AUTH_API` (Production/Preview)
+npm run build && npm run preview
