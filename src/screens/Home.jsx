@@ -1,9 +1,9 @@
-/* Injected: network background + particles */
-import Particles from '../components/Particles.jsx';
-
-import React from "react"; import { Link } from "react-router-dom"; import { motion } from "framer-motion";
-import Particles from "../components/Particles.jsx"; import nextLogo from "../assets/NEXT2.2BG.png";
-import logoBI from "../assets/BRITISH INSTITUTES INTERNATIONAL SCHOOL.png"; import illStudent from "../assets/illustration-student.svg";
+import React from "react"; import { Link } from "react-router-dom"; 
+import { motion } from "framer-motion";
+import Particles from "../components/Particles.jsx"; 
+import nextLogo from "../assets/NEXT2.2BG.png";
+import logoBI from "../assets/BRITISH INSTITUTES INTERNATIONAL SCHOOL.png"; 
+import illStudent from "../assets/illustration-student.svg";
 const card=(d=0)=>({initial:{opacity:0,y:20,scale:.98},whileInView:{opacity:1,y:0,scale:1},transition:{duration:.5,delay:d},viewport:{once:true,amount:.6}});
 export default function Home(){
   // Background layers
