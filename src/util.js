@@ -1,15 +1,22 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export async function hashPassword(pw) {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(pw, salt);
+const DEFAULT_SALT_ROUNDS = 10;
+const { JWT_SECRET, JWT_EXPIRATION = "7d" } = process.env;
+
+if (!JWT_SECRET) {
+  throw new Error("Missing required environment variable: JWT_SECRET");
 }
 
-export async function comparePassword(pw, hash) {
-  return bcrypt.compare(pw, hash);
+export async function hashPassword(password) {
+  const salt = await bcrypt.genSalt(DEFAULT_SALT_ROUNDS);
+  return bcrypt.hash(password, salt);
 }
 
-export function signJWT(payload) {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" });
+export function comparePassword(password, hash) {
+  return bcrypt.compare(password, hash);
+}
+
+export function signJWT(payload, options = {}) {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRATION, ...options });
 }
