@@ -20,7 +20,7 @@ export default function Login(){
       </select>
       <input placeholder="Email" className="w-full mb-2 border rounded-lg p-2" value={email} onChange={e=>setEmail(e.target.value)} />
       <input placeholder="Password" type="password" className="w-full mb-4 border rounded-lg p-2" value={password} onChange={e=>setPassword(e.target.value)} />
-      <button onClick={async()=>{ await login({ email, password, mode }); if(mode==="admin") nav("/admin"); if(mode==="school") nav("/school"); if(mode==="student") nav("/student"); }} className="w-full rounded-lg bg-slate-900 text-white py-2">Entra</button>
+      <button onClick={async()=>{ await login({ email, password, mode }); if(mode==="admin") nav("/admin"); if(mode==="school") nav("/school"); if(mode==="student") nav("/student"); }} className="w-full rounded-lg bg-binavy text-white py-2">Entra</button>
     </div>
   )
 }

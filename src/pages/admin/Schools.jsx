@@ -21,7 +21,7 @@ export default function AdminSchools(){
       <div className="rounded-2xl border bg-white p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold">OTP per registrazione Scuole</h2>
-          <button onClick={createOtp} className="px-3 py-1 rounded-lg bg-slate-900 text-white">Genera OTP</button>
+          <button onClick={createOtp} className="px-3 py-1 rounded-xl bg-binavy text-white shadow-soft">Genera OTP</button>
         </div>
         <ul className="text-sm grid md:grid-cols-3 gap-2">
           {otps.map(o=> (

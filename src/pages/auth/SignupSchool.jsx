@@ -30,7 +30,7 @@ export default function SignupSchool(){
       <input placeholder="Nome scuola" className="w-full mb-2 border rounded-lg p-2" value={name} onChange={e=>setName(e.target.value)} />
       <input placeholder="Email referente" className="w-full mb-2 border rounded-lg p-2" value={email} onChange={e=>setEmail(e.target.value)} />
       <input placeholder="Password" type="password" className="w-full mb-4 border rounded-lg p-2" value={password} onChange={e=>setPassword(e.target.value)} />
-      <button onClick={submit} className="w-full rounded-lg bg-slate-900 text-white py-2">Crea account scuola</button>
+      <button onClick={submit} className="w-full rounded-lg bg-binavy text-white py-2">Crea account scuola</button>
       {res && <p className="text-sm mt-3">{res}</p>}
     </div>
   )

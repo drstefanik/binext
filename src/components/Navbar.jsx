@@ -2,19 +2,23 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
+import logo from "../assets/BRITISH INSTITUTES INTERNATIONAL SCHOOL.png"; // Inserisci il file in assets
 export default function Navbar(){
   const { user, role, logout } = useAuth();
   const nav = useNavigate();
   return (
-    <header className="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">
-      <div className="mx-auto max-w-6xl p-3 flex items-center gap-4">
-        <Link to="/" className="font-semibold text-xl">BI NEXT</Link>
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b">
+      <div className="mx-auto max-w-6xl p-3 flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-2">
+          {logo && <img src={logo} className="h-8 w-auto" alt="BI NEXT" />}
+          <span className="font-semibold text-lg text-binavy">BI NEXT</span>
+        </Link>
         <nav className="ml-auto flex items-center gap-3 text-sm">
           {!user && (
             <>
-              <Link to="/login">Login</Link>
+              <Link to="/login" className="px-3 py-1 rounded-lg hover:bg-slate-100">Login</Link>
               <Link to="/signup-school" className="px-3 py-1 rounded-lg border">Registra Scuola</Link>
-              <Link to="/signup-student" className="px-3 py-1 rounded-lg bg-slate-900 text-white">Registrati Studente</Link>
+              <Link to="/signup-student" className="px-3 py-1 rounded-lg bg-binavy text-white shadow-soft">Registrati Studente</Link>
             </>
           )}
           {user && (
