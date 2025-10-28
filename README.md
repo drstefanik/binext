@@ -1,13 +1,20 @@
-# BI NEXT Frontend v2
+# BI NEXT Frontend v3 (Tailwind)
 
-- Home dedicata su `/`
-- Login su `/login`
-- Stile leggero inline + `styles.css` (brand #0C3C4A)
-- SPA rewrites per Vercel (`vercel.json`)
+- Tailwind + PostCSS inclusi
+- Home su `/`, Login su `/login`
+- SPA rewrites: `vercel.json`
+- Env: `VITE_AUTH_API`
 
-Setup:
+## Setup
 ```bash
 npm install
-cp .env.example .env  # VITE_AUTH_API
-npm run build && npm run preview
+cp .env.example .env
+npm run dev
+npm run build
+npm run preview
 ```
+
+## Vercel
+- Build: `npm run build`
+- Output: `dist`
+- Env: `VITE_AUTH_API` (Production/Preview)

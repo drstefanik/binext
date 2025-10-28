@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { login } from '../api'
 import { Link } from 'react-router-dom'
 
-export default function Login() {
+export default function Login(){
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function onSubmit(e) {
+  async function onSubmit(e){
     e.preventDefault()
     setLoading(true); setMsg('')
     try {
@@ -16,6 +16,7 @@ export default function Login() {
       localStorage.setItem('token', data.token)
       localStorage.setItem('role', data.role)
       setMsg(`Accesso effettuato: ${data.role}`)
+      // TODO: redirect in base al ruolo
     } catch (e) {
       setMsg(e.message)
     } finally {
@@ -24,22 +25,27 @@ export default function Login() {
   }
 
   return (
-    <div className="container">
-      <div className="card">
-        <h2 style={{marginTop:0}}>Accedi</h2>
-        <form onSubmit={onSubmit}>
-          <label>Email</label>
-          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@example.com" />
-          <label>Password</label>
-          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" />
-          <button className="btn primary" style={{width:'100%'}} disabled={loading}>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <h2 className="text-2xl font-bold mb-1">Accedi</h2>
+        <p className="text-sm text-slate-500 mb-6">Inserisci le tue credenziali</p>
+        <form onSubmit={onSubmit} className="space-y-3">
+          <div>
+            <label className="text-sm">Email</label>
+            <input className="mt-1 w-full border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-brand"
+                   placeholder="name@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
+          </div>
+          <div>
+            <label className="text-sm">Password</label>
+            <input type="password" className="mt-1 w-full border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-brand"
+                   placeholder="••••••••" value={password} onChange={e=>setPassword(e.target.value)} />
+          </div>
+          <button disabled={loading} className="w-full py-2 rounded-xl bg-brand text-white font-semibold hover:opacity-90 transition">
             {loading ? 'Verifica…' : 'Login'}
           </button>
         </form>
-        {msg && <p style={{marginTop:12}}>{msg}</p>}
-        <p className="muted" style={{marginTop:12}}>
-          <Link to="/">← Torna alla Home</Link>
-        </p>
+        {msg && <p className="mt-4 text-sm">{msg}</p>}
+        <p className="text-xs text-slate-500 mt-6"><Link to="/">← Torna alla Home</Link></p>
       </div>
     </div>
   )
