@@ -1,25 +1,20 @@
+# BI NEXT Auth API
 
-# BI NEXT — UI v2 (Full)  
-React + Vite + Tailwind + Framer Motion + integrazione Airtable (Admin/Scuola/Studente).
+Mini backend per login/signup (Admin, School, Student) con Airtable, bcrypt e JWT.
 
 ## Setup
-1) `npm i`
-2) Copia `.env.example` → `.env` e inserisci PAT/BaseID e nomi tabelle.
-3) `npm run dev`
+```bash
+npm install
+cp .env.example .env
+# poi inserisci le chiavi
+npm run start
+```
 
-## Env richieste
-- VITE_AT_API_KEY
-- VITE_AT_BASE_ID
-- VITE_AT_TABLE_ADMINS
-- VITE_AT_TABLE_SCHOOLS
-- VITE_AT_TABLE_SCHOOL_OTPS
-- VITE_AT_TABLE_STUDENTS
-- VITE_AT_TABLE_FOLDERS
-- VITE_AT_TABLE_FILES
+## Endpoints
+- `POST /auth/login` → { email, password }
+- `POST /auth/signup-student` → { full_name, email, password, schoolId? }
+- `POST /auth/signup-school` → { name, email, password, otp_code }
 
-## Percorsi principali
-- `/` Home (UI premium)
-- `/login?mode=admin|school|student`
-- `/signup-school` (OTP)
-- `/signup-student` (Codice Scuola)
-- Aree: `/admin`, `/school`, `/student`
+## Note
+- Campi richiesti in Airtable: vedere commenti nei file sorgente.
+- Non committare `.env`.
