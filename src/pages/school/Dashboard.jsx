@@ -1,1 +1,1 @@
-import React from 'react'; export default function SchoolDashboard(){ return <div className="rounded-2xl border bg-white p-4">Dashboard Scuola (studenti, report, entry test — placeholder)</div> }
+import React from'react';export default function SchoolDashboard(){return <div className='rounded-2xl border bg-white p-4'>Dashboard Scuola (studenti, report, entry test — placeholder)</div>}

@@ -2,4 +2,4 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@layer base { :root { --brand: #0C3C4A; } }
+.animate-hue { animation: hue 18s linear infinite; }

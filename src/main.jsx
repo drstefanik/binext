@@ -21,58 +21,26 @@ import Protected from "./routes/Protected.jsx";
 import "./styles/tailwind.css";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
-      { path: "signup-school", element: <SignupSchool /> },
-      { path: "signup-student", element: <SignupStudent /> },
-      {
-        path: "admin",
-        element: (
-          <Protected roles={["admin"]}>
-            <AdminLayout />
-          </Protected>
-        ),
-        children: [
-          { index: true, element: <AdminFolders /> },
-          { path: "folders", element: <AdminFolders /> },
-          { path: "files", element: <AdminFiles /> },
-          { path: "schools", element: <AdminSchools /> },
-        ],
-      },
-      {
-        path: "school",
-        element: (
-          <Protected roles={["school"]}>
-            <SchoolLayout />
-          </Protected>
-        ),
-        children: [
-          { index: true, element: <SchoolDashboard /> },
-          { path: "downloads", element: <SchoolDownloads /> },
-        ],
-      },
-      {
-        path: "student",
-        element: (
-          <Protected roles={["student"]}>
-            <StudentLayout />
-          </Protected>
-        ),
-        children: [
-          { index: true, element: <StudentDashboard /> },
-          { path: "downloads", element: <StudentDownloads /> },
-        ],
-      },
-    ],
-  },
+  { path: "/", element: <App />, children: [
+    { index: true, element: <Home /> },
+    { path: "login", element: <Login /> },
+    { path: "signup-school", element: <SignupSchool /> },
+    { path: "signup-student", element: <SignupStudent /> },
+    { path: "admin", element: <Protected roles={["admin"]}><AdminLayout/></Protected>, children: [
+      { index: true, element: <AdminFolders /> },
+      { path: "folders", element: <AdminFolders /> },
+      { path: "files", element: <AdminFiles /> },
+      { path: "schools", element: <AdminSchools /> },
+    ]},
+    { path: "school", element: <Protected roles={["school"]}><SchoolLayout/></Protected>, children: [
+      { index: true, element: <SchoolDashboard /> },
+      { path: "downloads", element: <SchoolDownloads /> },
+    ]},
+    { path: "student", element: <Protected roles={["student"]}><StudentLayout/></Protected>, children: [
+      { index: true, element: <StudentDashboard /> },
+      { path: "downloads", element: <StudentDownloads /> },
+    ]},
+  ]},
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<React.StrictMode><RouterProvider router={router} /></React.StrictMode>);
