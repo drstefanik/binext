@@ -20,15 +20,15 @@ function sanitizeFolder(record) {
   const fields = record?.fields ?? {};
   const parentField = fields.parent || fields.parent_folder || fields.folder_parent;
   const parentId = Array.isArray(parentField) && parentField.length > 0 ? parentField[0] : null;
-  const orderValue = typeof fields.order === "number" ? fields.order : Number(fields.order);
+  const rawOrder = fields.order ?? fields.sort_order;
+  const parsedOrder = Number(rawOrder);
 
   return {
     id: record.id,
     name: fields.name ?? fields.title ?? "",
     slug: fields.slug ?? fields.identifier ?? null,
-    order: Number.isFinite(orderValue) ? orderValue : 0,
     parent: typeof parentId === "string" ? parentId : null,
-    description: fields.description ?? null,
+    order: Number.isFinite(parsedOrder) ? parsedOrder : 999,
   };
 }
 
@@ -36,17 +36,28 @@ function sanitizeFile(record) {
   const fields = record?.fields ?? {};
   const folderField = fields.folder || fields.folders || fields.parent_folder;
   const folderId = Array.isArray(folderField) && folderField.length > 0 ? folderField[0] : null;
-  const orderValue = typeof fields.order === "number" ? fields.order : Number(fields.order);
-  return {
+  const rawOrder = fields.order ?? fields.sort_order;
+  const parsedOrder = Number(rawOrder);
+
+  const file = {
     id: record.id,
-    name: fields.name ?? fields.title ?? "",
-    slug: fields.slug ?? null,
-    type: fields.type ?? fields.format ?? null,
+    title: fields.title ?? fields.name ?? "",
+    type: fields.type ?? fields.format ?? "",
     url: fields.url ?? fields.link ?? fields.href ?? null,
     folder: typeof folderId === "string" ? folderId : null,
-    description: fields.description ?? null,
-    order: Number.isFinite(orderValue) ? orderValue : 0,
   };
+
+  if (Number.isFinite(parsedOrder)) {
+    file.order = parsedOrder;
+  }
+
+  const rawSize = fields.size ?? fields.file_size ?? null;
+  const parsedSize = Number(rawSize);
+  if (Number.isFinite(parsedSize) && parsedSize > 0) {
+    file.size = parsedSize;
+  }
+
+  return file;
 }
 
 function filterFileBySchool(record, schoolId) {
@@ -97,11 +108,16 @@ export default async function handler(req, res) {
 
   try {
     const folderRecords = await tbl.FOLDERS.select({
-      filterByFormula: `{visibility} = "student"`,
-      sort: [{ field: "order", direction: "asc" }],
+      filterByFormula: '{visibility} = "student"',
     }).all();
 
-    const folders = folderRecords.map(sanitizeFolder);
+    const folders = folderRecords
+      .map(sanitizeFolder)
+      .sort((a, b) => {
+        const orderDiff = (a.order ?? 999) - (b.order ?? 999);
+        if (orderDiff !== 0) return orderDiff;
+        return (a.name || "").localeCompare(b.name || "");
+      });
     const folderIds = folders.map((folder) => folder.id);
     const folderIdSet = new Set(folderIds);
 
@@ -113,20 +129,7 @@ export default async function handler(req, res) {
 
       const fileRecords = await tbl.FILES.select({
         filterByFormula: fileFilterFormula,
-        fields: [
-          "title",
-          "type",
-          "url",
-          "size",
-          "folder",
-          "order",
-          "slug",
-          "name",
-          "school",
-          "schools",
-          "description",
-        ],
-        sort: [{ field: "order", direction: "asc" }],
+        fields: ["title", "type", "url", "size", "folder", "order", "name", "link", "href", "format"],
       }).all();
 
       files = fileRecords
@@ -136,12 +139,26 @@ export default async function handler(req, res) {
           folderId: extractFolderId(record),
         }))
         .filter(({ folderId }) => folderId && folderIdSet.has(folderId))
-        .map(({ record }) => sanitizeFile(record));
+        .map(({ record }) => sanitizeFile(record))
+        .sort((a, b) => {
+          const orderDiff = (a.order ?? 999) - (b.order ?? 999);
+          if (orderDiff !== 0) return orderDiff;
+          return (a.title || "").localeCompare(b.title || "");
+        })
+        .map((file) => {
+          if ("order" in file) {
+            const { order, ...rest } = file;
+            return rest;
+          }
+          return file;
+        });
     }
+
+    console.log(`student tree result - Folders: ${folders.length}, Files: ${files.length}`);
 
     res.status(200).json({ folders, files });
   } catch (error) {
-    console.error("Failed to load student content tree", error);
-    return sendError(res, 500, "Errore nel recupero dei contenuti");
+    console.error("student tree error", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
