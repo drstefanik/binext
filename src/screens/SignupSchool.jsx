@@ -15,6 +15,7 @@ export default function SignupSchool() {
   const [otp, setOtp] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [schoolCode, setSchoolCode] = useState('')
   const [loading, setLoading] = useState(false)
 
   const isValid = useMemo(() => {
@@ -50,11 +51,13 @@ export default function SignupSchool() {
       setPassword('')
       setConfirmPassword('')
       setOtp('')
+      setSchoolCode(data?.schoolCode || '')
       const destination = getDashboardPath(data?.role) || '/school'
-      setSuccess('Registrazione completata, ti reindirizzo…')
+      const codeMessage = data?.schoolCode ? ` Il tuo Codice Scuola è ${data.schoolCode}.` : ''
+      setSuccess(`Registrazione completata!${codeMessage} Ti reindirizzo…`)
       setTimeout(() => {
         navigate(destination, { replace: true })
-      }, 600)
+      }, 1000)
     } catch (err) {
       setPassword('')
       setConfirmPassword('')
@@ -89,6 +92,11 @@ export default function SignupSchool() {
             aria-live="polite"
           >
             <span>{success}</span>
+            {schoolCode && (
+              <div className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-binavy">
+                Codice Scuola: {schoolCode}
+              </div>
+            )}
             <Link to="/school" className="font-medium text-emerald-700 underline">
               Vai alla dashboard scuola
             </Link>
