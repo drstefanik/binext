@@ -4,6 +4,7 @@ import { ApiError, getDashboardPath, persistSession, signupStudent } from '../ap
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/
+const schoolCodeRegex = /^[A-HJ-NP-Z2-9]{8}$/
 
 export default function SignupStudent() {
   const navigate = useNavigate()
@@ -17,13 +18,15 @@ export default function SignupStudent() {
   const [loading, setLoading] = useState(false)
 
   const isValid = useMemo(() => {
+    const normalizedCode = schoolCode.trim().toUpperCase()
     return (
       fullName.trim().length > 1 &&
       emailRegex.test(email.trim()) &&
       passwordRegex.test(password) &&
-      confirmPassword === password
+      confirmPassword === password &&
+      schoolCodeRegex.test(normalizedCode)
     )
-  }, [fullName, email, password, confirmPassword])
+  }, [fullName, email, password, confirmPassword, schoolCode])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -34,23 +37,28 @@ export default function SignupStudent() {
     setLoading(true)
 
     try {
+      const normalizedCode = schoolCode.trim().toUpperCase()
+      if (!schoolCodeRegex.test(normalizedCode)) {
+        setError('Codice Scuola non valido')
+        setLoading(false)
+        return
+      }
+
       const payload = {
         full_name: fullName.trim(),
         email: email.trim(),
         password,
-      }
-
-      const trimmedCode = schoolCode.trim()
-      if (trimmedCode.length > 0) {
-        payload.schoolId = trimmedCode
+        school_code: normalizedCode,
       }
 
       const data = await signupStudent(payload)
       persistSession(data)
       setPassword('')
       setConfirmPassword('')
+      setSchoolCode('')
       const destination = getDashboardPath(data?.role) || '/student'
-      setSuccess('Registrazione completata, ti reindirizzo…')
+      const schoolName = data?.schoolName ? ` ${data.schoolName}` : ''
+      setSuccess(`Registrazione completata per la scuola${schoolName}. Ti reindirizzo…`)
       setTimeout(() => {
         navigate(destination, { replace: true })
       }, 600)
@@ -165,20 +173,26 @@ export default function SignupStudent() {
 
           <div>
             <label htmlFor="student-school" className="text-sm font-medium text-slate-700">
-              Codice Scuola <span className="text-xs text-slate-400">(opzionale)</span>
+              Codice Scuola
             </label>
             <input
               id="student-school"
               type="text"
               autoComplete="off"
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              inputMode="text"
+              pattern="[A-HJ-NP-Z2-9]{8}"
+              maxLength={8}
+              required
+              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm uppercase shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
               value={schoolCode}
-              onChange={(event) => setSchoolCode(event.target.value)}
-              placeholder="Inserisci il Codice Scuola se disponibile"
+              onChange={(event) =>
+                setSchoolCode(event.target.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g, ''))
+              }
+              placeholder="ES. ABCD2345"
               disabled={loading}
             />
             <p className="mt-1 text-xs text-slate-500">
-              Se non lo hai, potrai collegare la tua scuola dopo l’accesso.
+              Inserisci il codice fornito dalla tua scuola (8 caratteri, lettere maiuscole e numeri).
             </p>
           </div>
 
@@ -207,6 +221,9 @@ function mapStudentError(err) {
     const serverMessage = err.payload?.error || err.message
     if (err.status === 409) {
       return serverMessage || 'Email già registrata.'
+    }
+    if (err.status === 400) {
+      return serverMessage || 'Codice Scuola non valido.'
     }
     if (err.status >= 500) {
       return 'Errore server, riprova più tardi.'

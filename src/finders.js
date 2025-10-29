@@ -28,6 +28,16 @@ export async function findSchoolByEmail(email) {
   return findByEmailIn(tbl.SCHOOLS, email);
 }
 
+export async function findSchoolByCode(code) {
+  if (!code) return null;
+  const normalizedCode = String(code).trim().toUpperCase();
+  if (!normalizedCode) return null;
+  return selectSingle(tbl.SCHOOLS, {
+    filterByFormula: `UPPER({school_code}) = "${escapeFormulaValue(normalizedCode)}"`,
+    maxRecords: 1,
+  });
+}
+
 export async function findStudentByEmail(email) {
   return findByEmailIn(tbl.STUDENTS, email);
 }

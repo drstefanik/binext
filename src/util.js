@@ -20,3 +20,7 @@ export function comparePassword(password, hash) {
 export function signJWT(payload, options = {}) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRATION, ...options });
 }
+
+export function verifyJWT(token, options = {}) {
+  return jwt.verify(token, JWT_SECRET, options);
+}

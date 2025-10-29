@@ -65,18 +65,23 @@ export async function signupSchool({ name, email, password, otp_code }) {
   })
 }
 
-export async function signupStudent({ full_name, email, password, schoolId }) {
-  const body = { full_name, email, password }
-  if (schoolId) {
-    body.schoolId = schoolId
-  }
+export async function signupStudent({ full_name, email, password, school_code }) {
+  const body = { full_name, email, password, school_code }
   return request('/auth/signup-student', {
     method: 'POST',
     body,
   })
 }
 
-export function persistSession({ token, role, id, name, schoolId }) {
+export function persistSession({
+  token,
+  role,
+  id,
+  name,
+  schoolId,
+  schoolName,
+  schoolCode,
+}) {
   if (token) {
     localStorage.setItem('token', token)
   } else {
@@ -105,6 +110,18 @@ export function persistSession({ token, role, id, name, schoolId }) {
   } else {
     localStorage.removeItem('schoolId')
   }
+
+  if (schoolName) {
+    localStorage.setItem('schoolName', schoolName)
+  } else {
+    localStorage.removeItem('schoolName')
+  }
+
+  if (schoolCode) {
+    localStorage.setItem('schoolCode', schoolCode)
+  } else {
+    localStorage.removeItem('schoolCode')
+  }
 }
 
 export function clearSession() {
@@ -113,6 +130,8 @@ export function clearSession() {
   localStorage.removeItem('name')
   localStorage.removeItem('id')
   localStorage.removeItem('schoolId')
+  localStorage.removeItem('schoolName')
+  localStorage.removeItem('schoolCode')
 }
 
 export function getStoredSession() {
@@ -121,7 +140,9 @@ export function getStoredSession() {
   const id = localStorage.getItem('id')
   const name = localStorage.getItem('name')
   const schoolId = localStorage.getItem('schoolId')
-  return { token, role, id, name, schoolId }
+  const schoolName = localStorage.getItem('schoolName')
+  const schoolCode = localStorage.getItem('schoolCode')
+  return { token, role, id, name, schoolId, schoolName, schoolCode }
 }
 
 export function getDashboardPath(role) {
@@ -146,4 +167,8 @@ export function buildAuthHeaders(headers = {}) {
     }
   }
   return headers
+}
+
+export async function fetchSchoolCode() {
+  return request('/school/code', { method: 'GET', withAuth: true })
 }

@@ -1,5 +1,6 @@
 import { ensureMethod, parseJsonBody, sendError } from "../_lib/http.js";
 import { comparePassword, signJWT } from "../../src/util.js";
+import { tbl } from "../../src/airtable.js";
 import {
   findAdminByEmail,
   findSchoolByEmail,
@@ -63,9 +64,29 @@ export default async function handler(req, res) {
 
   try {
     if (await tryLogin(await findAdminByEmail(email), "admin", "full_name")) return;
-    if (await tryLogin(await findSchoolByEmail(email), "school", "name")) return;
+
+    const schoolUser = await findSchoolByEmail(email);
+    if (
+      await tryLogin(schoolUser, "school", "name", { schoolCode: schoolUser?.school_code })
+    )
+      return;
+
     const student = await findStudentByEmail(email);
-    if (await tryLogin(student, "student", "full_name", { schoolId: student?.school?.[0] })) return;
+    const studentExtras = {};
+    const schoolId = student?.school?.[0];
+    if (schoolId) {
+      studentExtras.schoolId = schoolId;
+      try {
+        const schoolRecord = await tbl.SCHOOLS.find(schoolId);
+        const schoolName = schoolRecord?.fields?.name;
+        if (schoolName) {
+          studentExtras.schoolName = schoolName;
+        }
+      } catch (innerError) {
+        console.error("Unable to load school details for student login", innerError);
+      }
+    }
+    if (await tryLogin(student, "student", "full_name", studentExtras)) return;
     return sendError(res, 401, "Email o password non valide");
   } catch (error) {
     console.error("Login error", error);
