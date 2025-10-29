@@ -97,16 +97,35 @@ export default async function handler(req, res) {
 
   try {
     const folderRecords = await tbl.FOLDERS.select({
-      filterByFormula: '{visibility} = "student"',
+      filterByFormula: `{visibility} = "student"`,
       sort: [{ field: "order", direction: "asc" }],
     }).all();
 
     const folders = folderRecords.map(sanitizeFolder);
-    const folderIds = new Set(folders.map((folder) => folder.id));
+    const folderIds = folders.map((folder) => folder.id);
+    const folderIdSet = new Set(folderIds);
 
     let files = [];
-    if (folderIds.size > 0) {
+    if (folderIdSet.size > 0) {
+      const fileFilterFormula = `OR(${folderIds
+        .map((id) => `FIND('${id}', ARRAYJOIN({folder}))`)
+        .join(",")})`;
+
       const fileRecords = await tbl.FILES.select({
+        filterByFormula: fileFilterFormula,
+        fields: [
+          "title",
+          "type",
+          "url",
+          "size",
+          "folder",
+          "order",
+          "slug",
+          "name",
+          "school",
+          "schools",
+          "description",
+        ],
         sort: [{ field: "order", direction: "asc" }],
       }).all();
 
@@ -116,7 +135,7 @@ export default async function handler(req, res) {
           record,
           folderId: extractFolderId(record),
         }))
-        .filter(({ folderId }) => folderId && folderIds.has(folderId))
+        .filter(({ folderId }) => folderId && folderIdSet.has(folderId))
         .map(({ record }) => sanitizeFile(record));
     }
 
