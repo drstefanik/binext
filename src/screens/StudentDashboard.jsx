@@ -287,9 +287,9 @@ export default function StudentDashboard() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <Toast toast={toast} onClose={closeToast} />
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold text-slate-900">Area Studente</h1>
-        <p className="mt-3 text-slate-600">
+      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Area Studente</h1>
+        <p className="mt-3 text-slate-600 dark:text-slate-300">
           {studentName
             ? `Ciao ${studentName}, esplora i materiali condivisi con te dalla tua scuola.`
             : 'Accedi ai materiali condivisi con gli studenti della tua scuola.'}
@@ -303,7 +303,7 @@ export default function StudentDashboard() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[260px,1fr]">
-        <aside className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+        <aside className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
           <h2 className="px-2 text-sm font-semibold uppercase tracking-wider text-slate-500">
             Cartelle
           </h2>
@@ -332,7 +332,7 @@ export default function StudentDashboard() {
           )}
         </aside>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
           <div className="flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <nav className="flex flex-wrap items-center gap-2 text-sm text-slate-500" aria-label="Percorso cartella">
