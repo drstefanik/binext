@@ -73,10 +73,10 @@ export default function SignupStudent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10">
-      <div className="mx-auto w-full max-w-xl rounded-3xl bg-white p-8 shadow-xl">
-        <h1 className="text-3xl font-semibold text-center">Crea il tuo account studente</h1>
-        <p className="mt-2 text-center text-sm text-slate-500">
+    <div className="min-h-screen bg-slate-50 px-4 py-10 dark:bg-slate-900">
+      <div className="mx-auto w-full max-w-xl rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-900/70 dark:border dark:border-white/10">
+        <h1 className="text-3xl font-semibold text-center text-slate-900 dark:text-white">Crea il tuo account studente</h1>
+        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-300">
           Registrati con la tua email. Inserisci il Codice Scuola se lo hai già.
         </p>
 
