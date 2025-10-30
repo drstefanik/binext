@@ -60,22 +60,6 @@ function sanitizeFile(record) {
   return file;
 }
 
-function filterFileBySchool(record, schoolId) {
-  const fields = record?.fields ?? {};
-  const schoolField = fields.school || fields.schools;
-  const schoolList = Array.isArray(schoolField) ? schoolField : [];
-
-  if (schoolList.length === 0) {
-    return true;
-  }
-
-  if (!schoolId) {
-    return false;
-  }
-
-  return schoolList.includes(schoolId);
-}
-
 function extractFolderId(record) {
   const fields = record?.fields ?? {};
   const folderField = fields.folder || fields.folders || fields.parent_folder;
@@ -129,40 +113,12 @@ export default async function handler(req, res) {
         .map((id) => `FIND('${id}', ARRAYJOIN({folder}))`)
         .join(",")})`;
 
-      const fileSelectOptions = {
+      const fileRecords = await tbl.FILES.select({
         filterByFormula: fileFilterFormula,
-        fields: ["title", "type", "url", "size", "folder", "school"],
-      };
-
-      let fileRecords;
-      try {
-        fileRecords = await tbl.FILES.select(fileSelectOptions).all();
-      } catch (selectError) {
-        const errorType = selectError?.error?.type || "";
-        const errorMessage = selectError?.message || "";
-        const shouldRetryWithoutSchool =
-          fileSelectOptions.fields.includes("school") &&
-          selectError?.statusCode === 422 &&
-          ((typeof errorType === "string" &&
-            errorType.toUpperCase() === "UNKNOWN_FIELD_NAME") ||
-            (typeof errorMessage === "string" &&
-              errorMessage.toUpperCase().includes("UNKNOWN_FIELD_NAME")));
-
-        if (shouldRetryWithoutSchool) {
-          const fieldsWithoutSchool = fileSelectOptions.fields.filter(
-            (field) => field !== "school"
-          );
-          fileRecords = await tbl.FILES.select({
-            ...fileSelectOptions,
-            fields: fieldsWithoutSchool,
-          }).all();
-        } else {
-          throw selectError;
-        }
-      }
+        fields: ["title", "type", "url", "size", "folder"],
+      }).all();
 
       files = fileRecords
-        .filter((record) => filterFileBySchool(record, payload?.schoolId))
         .map((record) => ({
           record,
           folderId: extractFolderId(record),
