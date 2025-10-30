@@ -109,6 +109,8 @@ export default async function handler(req, res) {
   try {
     const folderRecords = await tbl.FOLDERS.select({
       filterByFormula: '{visibility} = "student"',
+      sort: [{ field: "order", direction: "asc" }],
+      fields: ["name", "slug", "visibility", "parent", "order"],
     }).all();
 
     const folders = folderRecords
@@ -127,10 +129,37 @@ export default async function handler(req, res) {
         .map((id) => `FIND('${id}', ARRAYJOIN({folder}))`)
         .join(",")})`;
 
-      const fileRecords = await tbl.FILES.select({
+      const fileSelectOptions = {
         filterByFormula: fileFilterFormula,
-        fields: ["title", "type", "url", "size", "folder", "order", "name", "link", "href", "format"],
-      }).all();
+        fields: ["title", "type", "url", "size", "folder", "school"],
+      };
+
+      let fileRecords;
+      try {
+        fileRecords = await tbl.FILES.select(fileSelectOptions).all();
+      } catch (selectError) {
+        const errorType = selectError?.error?.type || "";
+        const errorMessage = selectError?.message || "";
+        const shouldRetryWithoutSchool =
+          fileSelectOptions.fields.includes("school") &&
+          selectError?.statusCode === 422 &&
+          ((typeof errorType === "string" &&
+            errorType.toUpperCase() === "UNKNOWN_FIELD_NAME") ||
+            (typeof errorMessage === "string" &&
+              errorMessage.toUpperCase().includes("UNKNOWN_FIELD_NAME")));
+
+        if (shouldRetryWithoutSchool) {
+          const fieldsWithoutSchool = fileSelectOptions.fields.filter(
+            (field) => field !== "school"
+          );
+          fileRecords = await tbl.FILES.select({
+            ...fileSelectOptions,
+            fields: fieldsWithoutSchool,
+          }).all();
+        } else {
+          throw selectError;
+        }
+      }
 
       files = fileRecords
         .filter((record) => filterFileBySchool(record, payload?.schoolId))
@@ -154,11 +183,12 @@ export default async function handler(req, res) {
         });
     }
 
-    console.log(`student tree result - Folders: ${folders.length}, Files: ${files.length}`);
+    console.log("student tree folders", folders.length);
+    console.log("student tree files", files.length);
 
     res.status(200).json({ folders, files });
   } catch (error) {
     console.error("student tree error", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Errore nel recupero dei contenuti" });
   }
 }
