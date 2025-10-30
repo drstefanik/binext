@@ -73,17 +73,17 @@ export default function SignupStudent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10 dark:bg-slate-900">
-      <div className="mx-auto w-full max-w-xl rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-900/70 dark:border dark:border-white/10">
-        <h1 className="text-3xl font-semibold text-center text-slate-900 dark:text-white">Crea il tuo account studente</h1>
-        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-300">
+    <div className="min-h-screen bg-gradient-to-b from-biwhite via-biwhite to-binavy/10 px-4 py-10 dark:from-[#0a0f1f] dark:via-[#0a0f1f] dark:to-[#001c5e]">
+      <div className="mx-auto w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm shadow-soft backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
+        <h1 className="text-3xl font-semibold text-center text-binavy dark:text-white">Crea il tuo account studente</h1>
+        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-300">
           Registrati con la tua email. Inserisci il Codice Scuola se lo hai già.
         </p>
 
         {error && (
           <div
             role="alert"
-            className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="mt-6 rounded-xl border border-bireg/20 bg-bireg/10 px-4 py-3 text-sm text-bireg"
             aria-live="assertive"
           >
             {error}
@@ -92,7 +92,7 @@ export default function SignupStudent() {
 
         {success && (
           <div
-            className="mt-6 flex flex-col gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+            className="mt-6 flex flex-col gap-2 rounded-xl border border-emerald-200/60 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200"
             aria-live="polite"
           >
             <span>{success}</span>
@@ -104,7 +104,7 @@ export default function SignupStudent() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-5" noValidate aria-busy={loading} aria-live="polite">
           <div>
-            <label htmlFor="student-name" className="text-sm font-medium text-slate-700">
+            <label htmlFor="student-name" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Nome e Cognome
             </label>
             <input
@@ -112,7 +112,7 @@ export default function SignupStudent() {
               type="text"
               autoComplete="name"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
               disabled={loading}
@@ -120,7 +120,7 @@ export default function SignupStudent() {
           </div>
 
           <div>
-            <label htmlFor="student-email" className="text-sm font-medium text-slate-700">
+            <label htmlFor="student-email" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Email
             </label>
             <input
@@ -128,7 +128,7 @@ export default function SignupStudent() {
               type="email"
               autoComplete="email"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="nome@example.com"
@@ -137,7 +137,7 @@ export default function SignupStudent() {
           </div>
 
           <div>
-            <label htmlFor="student-password" className="text-sm font-medium text-slate-700">
+            <label htmlFor="student-password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Password
             </label>
             <input
@@ -145,17 +145,17 @@ export default function SignupStudent() {
               type="password"
               autoComplete="new-password"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
               disabled={loading}
             />
-            <p className="mt-1 text-xs text-slate-500">Minimo 8 caratteri, almeno una lettera e un numero.</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Minimo 8 caratteri, almeno una lettera e un numero.</p>
           </div>
 
           <div>
-            <label htmlFor="student-confirm-password" className="text-sm font-medium text-slate-700">
+            <label htmlFor="student-confirm-password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Conferma password
             </label>
             <input
@@ -163,7 +163,7 @@ export default function SignupStudent() {
               type="password"
               autoComplete="new-password"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="••••••••"
@@ -172,7 +172,7 @@ export default function SignupStudent() {
           </div>
 
           <div>
-            <label htmlFor="student-school" className="text-sm font-medium text-slate-700">
+            <label htmlFor="student-school" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Codice Scuola
             </label>
             <input
@@ -183,7 +183,7 @@ export default function SignupStudent() {
               pattern="[A-HJ-NP-Z2-9]{8}"
               maxLength={8}
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm uppercase shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm uppercase text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={schoolCode}
               onChange={(event) =>
                 setSchoolCode(event.target.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g, ''))
@@ -191,7 +191,7 @@ export default function SignupStudent() {
               placeholder="ES. ABCD2345"
               disabled={loading}
             />
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Inserisci il codice fornito dalla tua scuola (8 caratteri, lettere maiuscole e numeri).
             </p>
           </div>
@@ -199,15 +199,15 @@ export default function SignupStudent() {
           <button
             type="submit"
             disabled={!isValid || loading}
-            className="w-full rounded-xl bg-binavy py-3 text-sm font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full bg-binavy py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-[#16348f] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
           >
             {loading ? 'Verifica…' : 'Crea account studente'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-500">
+        <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-300">
           Hai già un account?{' '}
-          <Link to="/login" className="font-medium text-binavy hover:underline">
+          <Link to="/login" className="font-semibold text-binavy hover:text-bireg focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-white dark:hover:text-bireg dark:focus-visible:ring-white/20 dark:focus-visible:ring-offset-[#0a0f1f]">
             Accedi
           </Link>
         </p>

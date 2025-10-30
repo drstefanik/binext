@@ -69,17 +69,17 @@ export default function SignupSchool() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10 dark:bg-slate-900">
-      <div className="mx-auto w-full max-w-xl rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-900/70 dark:border dark:border-white/10">
-        <h1 className="text-3xl font-semibold text-center text-slate-900 dark:text-white">Registra la tua scuola</h1>
-        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-300">
+    <div className="min-h-screen bg-gradient-to-b from-biwhite via-biwhite to-binavy/10 px-4 py-10 dark:from-[#0a0f1f] dark:via-[#0a0f1f] dark:to-[#001c5e]">
+      <div className="mx-auto w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm shadow-soft backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
+        <h1 className="text-3xl font-semibold text-center text-binavy dark:text-white">Registra la tua scuola</h1>
+        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-300">
           Inserisci l’OTP ricevuto e crea l’account della sede BI.
         </p>
 
         {error && (
           <div
             role="alert"
-            className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="mt-6 rounded-xl border border-bireg/20 bg-bireg/10 px-4 py-3 text-sm text-bireg"
             aria-live="assertive"
           >
             {error}
@@ -88,12 +88,12 @@ export default function SignupSchool() {
 
         {success && (
           <div
-            className="mt-6 flex flex-col gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+            className="mt-6 flex flex-col gap-2 rounded-xl border border-emerald-200/60 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200"
             aria-live="polite"
           >
             <span>{success}</span>
             {schoolCode && (
-              <div className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-binavy">
+              <div className="rounded-lg border border-binavy/20 bg-white px-3 py-2 text-center text-sm font-semibold text-binavy dark:border-white/10 dark:bg-[#152044] dark:text-white">
                 Codice Scuola: {schoolCode}
               </div>
             )}
@@ -103,10 +103,9 @@ export default function SignupSchool() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5" noValidate aria-busy={loading}
-          aria-live="polite">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5" noValidate aria-busy={loading} aria-live="polite">
           <div>
-            <label htmlFor="school-name" className="text-sm font-medium text-slate-700">
+            <label htmlFor="school-name" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Nome Scuola
             </label>
             <input
@@ -114,7 +113,7 @@ export default function SignupSchool() {
               type="text"
               autoComplete="organization"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={name}
               onChange={(event) => setName(event.target.value)}
               disabled={loading}
@@ -122,7 +121,7 @@ export default function SignupSchool() {
           </div>
 
           <div>
-            <label htmlFor="school-email" className="text-sm font-medium text-slate-700">
+            <label htmlFor="school-email" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Email istituzionale
             </label>
             <input
@@ -130,7 +129,7 @@ export default function SignupSchool() {
               type="email"
               autoComplete="email"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="nome@istituto.it"
@@ -139,7 +138,7 @@ export default function SignupSchool() {
           </div>
 
           <div>
-            <label htmlFor="school-password" className="text-sm font-medium text-slate-700">
+            <label htmlFor="school-password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Password
             </label>
             <input
@@ -147,17 +146,17 @@ export default function SignupSchool() {
               type="password"
               autoComplete="new-password"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
               disabled={loading}
             />
-            <p className="mt-1 text-xs text-slate-500">Minimo 8 caratteri, almeno una lettera e un numero.</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Minimo 8 caratteri, almeno una lettera e un numero.</p>
           </div>
 
           <div>
-            <label htmlFor="school-confirm-password" className="text-sm font-medium text-slate-700">
+            <label htmlFor="school-confirm-password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Conferma password
             </label>
             <input
@@ -165,7 +164,7 @@ export default function SignupSchool() {
               type="password"
               autoComplete="new-password"
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="••••••••"
@@ -174,7 +173,7 @@ export default function SignupSchool() {
           </div>
 
           <div>
-            <label htmlFor="school-otp" className="text-sm font-medium text-slate-700">
+            <label htmlFor="school-otp" className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Codice OTP
             </label>
             <input
@@ -184,27 +183,27 @@ export default function SignupSchool() {
               pattern="\d{6,8}"
               maxLength={8}
               required
-              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm tracking-widest focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-1"
+              className="mt-1 w-full rounded-xl border border-binavy/30 bg-white px-3 py-2 text-sm tracking-[0.4em] text-slate-700 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 focus:ring-offset-white dark:border-white/10 dark:bg-[#111a33] dark:text-slate-200 dark:focus:ring-[#6a87ff] dark:focus:ring-offset-[#0a0f1f]"
               value={otp}
               onChange={(event) => setOtp(event.target.value.replace(/[^\d]/g, ''))}
               placeholder="000000"
               disabled={loading}
             />
-            <p className="mt-1 text-xs text-slate-500">Codice fornito dal supporto BI (6 cifre).</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Codice fornito dal supporto BI (6 cifre).</p>
           </div>
 
           <button
             type="submit"
             disabled={!isValid || loading}
-            className="w-full rounded-xl bg-binavy py-3 text-sm font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full bg-binavy py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-[#16348f] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
           >
             {loading ? 'Verifica…' : 'Crea account scuola'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-500">
+        <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-300">
           Hai già un account?{' '}
-          <Link to="/login" className="font-medium text-binavy hover:underline">
+          <Link to="/login" className="font-semibold text-binavy hover:text-bireg focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-white dark:hover:text-bireg dark:focus-visible:ring-white/20 dark:focus-visible:ring-offset-[#0a0f1f]">
             Accedi
           </Link>
         </p>

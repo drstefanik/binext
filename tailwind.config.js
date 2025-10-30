@@ -1,13 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'media',
+  darkMode: 'class',
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      colors: { binavy: "#0C3C4A" },
-      boxShadow: { soft: "0 10px 30px rgba(0,0,0,.06)" },
+      colors: {
+        binavy: "#00247D",
+        bireg: "#CF142B",
+        biwhite: "#FFFFFF",
+      },
+      boxShadow: {
+        soft: "0 18px 45px -15px rgba(0, 36, 125, 0.35)",
+      },
       backgroundImage: {
-        "hero-gradient": "linear-gradient(180deg,#f6fbff,transparent 60%)",
+        "hero-gradient": "linear-gradient(180deg,rgba(0,36,125,0.08),transparent 60%)",
         "network": "url('/src/assets/network.svg')",
       },
       keyframes: {
