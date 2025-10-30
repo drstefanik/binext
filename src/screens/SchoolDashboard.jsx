@@ -70,9 +70,9 @@ export default function SchoolDashboard() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold text-slate-900">Area Scuola</h1>
-        <p className="mt-3 text-slate-600">
+      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Area Scuola</h1>
+        <p className="mt-3 text-slate-600 dark:text-slate-300">
           {schoolName
             ? `Benvenuto ${schoolName}! Qui puoi gestire il Codice Scuola da condividere con gli studenti.`
             : 'Benvenuto nella dashboard della tua scuola. Qui troverai materiali e potrai gestire il tuo Codice Scuola.'}
@@ -83,9 +83,9 @@ export default function SchoolDashboard() {
         </div>
       </div>
 
-      <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-slate-900">Codice Scuola</h2>
-        <p className="mt-2 text-sm text-slate-600">
+      <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+        <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Codice Scuola</h2>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
           Condividi questo codice con gli studenti per permettere la registrazione ai corsi BI Next.
         </p>
 
@@ -98,9 +98,9 @@ export default function SchoolDashboard() {
           </div>
         )}
 
-        <div className="mt-5 flex flex-col items-start gap-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-5 flex flex-col items-start gap-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-6 dark:border-white/10 dark:bg-slate-800/50 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-widest text-slate-500">Codice attivo</p>
+            <p className="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">Codice attivo</p>
             <p className="mt-2 text-3xl font-semibold tracking-[0.2em] text-binavy">
               {loadingCode ? '••••••••' : code || '— — — — — — — —'}
             </p>
