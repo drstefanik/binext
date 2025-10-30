@@ -15,50 +15,65 @@ const card = (d = 0) => ({
 
 export default function Home() {
   return (
-    <main className="relative overflow-hidden">
-      {/* === Background Layers === */}
-      <div className="absolute inset-0 -z-30 bg-hero-gradient"></div>
-      {/* rete statica di sfondo (SVG) */}
-      <div className="absolute inset-0 -z-20 bg-network bg-cover bg-center opacity-60"></div>
-      {/* particelle animate sopra la rete */}
+    <main className="relative overflow-hidden text-center">
+      {/* === SFONDO === */}
+      <div className="absolute inset-0 -z-30 bg-gradient-to-br from-[#00247D] via-[#ffffff] to-[#CF142B] animate-gradient-x"></div>
+      <div className="absolute inset-0 -z-20 bg-network bg-cover bg-center opacity-40"></div>
       <div className="absolute inset-0 -z-10">
-        <Particles density={90} />
+        <Particles density={100} />
       </div>
 
       {/* === HERO === */}
-      <section className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-16 text-center min-h-[70vh] flex flex-col justify-center">
+      <section className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-16 min-h-[80vh] flex flex-col justify-center items-center">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-6"
+          transition={{ duration: 0.8 }}
+          className="flex flex-col items-center gap-4"
         >
+          {/* LOGO NEXT */}
           {nextLogo && (
-            <img
+            <motion.img
               src={nextLogo}
               alt="NEXT"
-              className="h-16 md:h-20 w-auto animate-hue"
+              className="h-20 md:h-24 w-auto drop-shadow-lg hover:scale-105 transition-transform duration-500"
+              whileHover={{ scale: 1.05 }}
             />
           )}
-          <h1 className="text-3xl md:text-5xl font-semibold leading-tight">
-            La piattaforma per{" "}
-            <span className="text-binavy">scuole e studenti</span> di British
-            Institutes
+
+          {/* SOTTOTITOLO - SIGNIFICATO */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-lg md:text-xl font-medium bg-gradient-to-r from-[#00247D] via-[#CF142B] to-[#00247D] bg-clip-text text-transparent tracking-wide"
+          >
+            Native English eXperience Test
+          </motion.p>
+
+          {/* TITOLO PRINCIPALE */}
+          <h1 className="text-3xl md:text-5xl font-semibold leading-tight text-white drop-shadow-lg max-w-4xl">
+            Il programma di certificazione orizzontale per tutti gli studenti
+            della scuola pubblica italiana
           </h1>
-          <p className="max-w-2xl text-slate-600">
+
+          {/* DESCRIZIONE */}
+          <p className="max-w-2xl text-white/90 mt-4">
             Materiali ufficiali sempre aggiornati, area download dedicata alla
             tua sede e registrazione studenti con Codice Scuola.
           </p>
-          <div className="flex flex-wrap gap-3 justify-center">
+
+          {/* BOTTONI */}
+          <div className="flex flex-wrap gap-3 justify-center mt-6">
             <Link
               to="/signup-school"
-              className="px-6 py-3 rounded-2xl bg-binavy text-white shadow-soft hover:opacity-95"
+              className="px-6 py-3 rounded-2xl bg-[#00247D] text-white font-medium shadow-md hover:bg-[#001c5e] transition-all"
             >
               Registra la tua scuola
             </Link>
             <Link
               to="/signup-student"
-              className="px-6 py-3 rounded-2xl border hover:bg-white"
+              className="px-6 py-3 rounded-2xl border-2 border-white text-white font-medium hover:bg-white hover:text-[#00247D] transition-all"
             >
               Sono uno studente
             </Link>
@@ -67,10 +82,10 @@ export default function Home() {
       </section>
 
       {/* === CARD SEZIONI === */}
-      <section className="relative z-10 mx-auto max-w-7xl px-4 pb-16 grid md:grid-cols-2 gap-8 items-stretch">
+      <section className="relative z-10 mx-auto max-w-7xl px-4 pb-20 grid md:grid-cols-2 gap-8">
         <motion.div
           {...card(0.1)}
-          className="rounded-3xl border bg-white p-6 shadow-soft flex flex-col"
+          className="rounded-3xl bg-white/90 backdrop-blur-lg border border-[#00247D]/20 p-6 shadow-lg hover:shadow-xl transition-shadow"
         >
           <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-50">
             <img
@@ -80,12 +95,17 @@ export default function Home() {
             />
           </div>
           <div className="mt-5">
-            <h3 className="text-xl font-semibold mb-2">Scuola</h3>
-            <p className="text-sm opacity-70 mb-4">
+            <h3 className="text-xl font-semibold text-[#00247D] mb-2">
+              Scuola
+            </h3>
+            <p className="text-sm text-slate-600 mb-4">
               Spazio riservato alla sede per condividere i materiali con le
               proprie classi.
             </p>
-            <Link to="/signup-school" className="text-binavy font-medium">
+            <Link
+              to="/signup-school"
+              className="text-[#CF142B] font-medium hover:underline"
+            >
               Vai →
             </Link>
           </div>
@@ -93,63 +113,31 @@ export default function Home() {
 
         <motion.div
           {...card(0.2)}
-          className="rounded-3xl border bg-white p-6 shadow-soft flex flex-col"
+          className="rounded-3xl bg-white/90 backdrop-blur-lg border border-[#00247D]/20 p-6 shadow-lg hover:shadow-xl transition-shadow"
         >
           <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-50">
             <img
               src={illStudent}
-              alt=""
+              alt="Studente"
               className="w-full h-full object-contain p-6"
             />
           </div>
           <div className="mt-5">
-            <h3 className="text-xl font-semibold mb-2">Studente</h3>
-            <p className="text-sm opacity-70 mb-4">
+            <h3 className="text-xl font-semibold text-[#00247D] mb-2">
+              Studente
+            </h3>
+            <p className="text-sm text-slate-600 mb-4">
               Registrati con il Codice Scuola e accedi ai download della tua
               sede.
             </p>
-            <Link to="/signup-student" className="text-binavy font-medium">
+            <Link
+              to="/signup-student"
+              className="text-[#CF142B] font-medium hover:underline"
+            >
               Vai →
             </Link>
           </div>
         </motion.div>
-      </section>
-
-      {/* === COME FUNZIONA === */}
-      <section className="relative z-10 mx-auto max-w-7xl px-4 pb-20">
-        <div className="rounded-3xl bg-white p-8 shadow-soft border">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">
-            Come funziona (per le scuole)
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6 text-sm">
-            <div className="rounded-2xl border p-5">
-              <div className="text-binavy font-semibold mb-1">
-                1. Attiva la tua sede in 60s
-              </div>
-              <p className="opacity-70">
-                Inserisci l’OTP ricevuto e crea l’account scuola.
-              </p>
-            </div>
-            <div className="rounded-2xl border p-5">
-              <div className="text-binavy font-semibold mb-1">
-                2. Condividi il Codice Scuola
-              </div>
-              <p className="opacity-70">
-                Gli studenti si registrano in autonomia e si collegano alla tua
-                sede.
-              </p>
-            </div>
-            <div className="rounded-2xl border p-5">
-              <div className="text-binavy font-semibold mb-1">
-                3. Materiali sempre pronti
-              </div>
-              <p className="opacity-70">
-                Accedi all’area download con contenuti ufficiali, aggiornati e
-                organizzati.
-              </p>
-            </div>
-          </div>
-        </div>
       </section>
     </main>
   );
