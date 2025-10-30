@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { getStoredSession } from '../api'
+import { fetchSchoolByCode, getStoredSession } from '../api'
 import FileListItem from '../components/FileListItem'
 
 const API_BASE = import.meta.env.VITE_AUTH_API ?? '/api'
@@ -99,6 +99,7 @@ export default function StudentDashboard() {
   const session = useMemo(() => getStoredSession(), [])
   const token = session?.token
   const studentName = session?.name || ''
+  const schoolCode = session?.schoolCode || ''
   const [folders, setFolders] = useState([])
   const [files, setFiles] = useState([])
   const [selectedFolderId, setSelectedFolderId] = useState(null)
@@ -107,6 +108,9 @@ export default function StudentDashboard() {
   const [toast, setToast] = useState(null)
   const [copiedFileId, setCopiedFileId] = useState(null)
   const copyTimeoutRef = useRef(null)
+  const [school, setSchool] = useState(null)
+  const [loadingSchool, setLoadingSchool] = useState(false)
+  const [schoolError, setSchoolError] = useState('')
 
   const folderMap = useMemo(() => {
     const map = new Map()
@@ -247,6 +251,44 @@ export default function StudentDashboard() {
   }, [folders])
 
   useEffect(() => {
+    let active = true
+
+    if (!schoolCode) {
+      setSchool(null)
+      setSchoolError('')
+      setLoadingSchool(false)
+      return () => {
+        active = false
+      }
+    }
+
+    setLoadingSchool(true)
+    setSchoolError('')
+
+    fetchSchoolByCode(schoolCode)
+      .then((res) => {
+        if (!active) return
+        setSchool(res?.record || null)
+      })
+      .catch((error) => {
+        console.error('Unable to fetch school information', error)
+        if (!active) return
+        const message = error?.message || 'Impossibile recuperare le informazioni della scuola.'
+        setSchoolError(message)
+        setSchool(null)
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingSchool(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [schoolCode])
+
+  useEffect(() => {
     return () => {
       if (copyTimeoutRef.current) {
         clearTimeout(copyTimeoutRef.current)
@@ -301,6 +343,32 @@ export default function StudentDashboard() {
               Logout
             </Link>
           </div>
+        </div>
+
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">La mia scuola</h2>
+          {schoolError && (
+            <div
+              role="alert"
+              className="mt-4 rounded-2xl border border-bireg/20 bg-bireg/10 px-4 py-3 text-sm text-bireg"
+            >
+              {schoolError}
+            </div>
+          )}
+          {loadingSchool && !schoolError && (
+            <p className="mt-3 text-sm text-slate-500">Caricamento informazioni...</p>
+          )}
+          {!loadingSchool && !schoolError && !school && (
+            <p className="mt-3 text-sm text-slate-500">
+              Nessuna scuola associata. Assicurati di aver inserito il Codice Scuola durante la registrazione.
+            </p>
+          )}
+          {!loadingSchool && school && (
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-slate-800/60">
+              <p className="text-lg font-semibold text-binavy dark:text-white">{school.name}</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{school.email}</p>
+            </div>
+          )}
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[260px,1fr]">

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fetchSchoolCode, getStoredSession } from '../api'
+import { fetchSchoolCode, fetchStudentsBySchool, getStoredSession } from '../api'
 
 export default function SchoolDashboard() {
   const session = useMemo(() => getStoredSession(), [])
@@ -12,6 +12,9 @@ export default function SchoolDashboard() {
   const [loadingCode, setLoadingCode] = useState(false)
   const [codeError, setCodeError] = useState('')
   const [copyMessage, setCopyMessage] = useState('')
+  const [students, setStudents] = useState([])
+  const [loadingStudents, setLoadingStudents] = useState(false)
+  const [studentsError, setStudentsError] = useState('')
 
   useEffect(() => {
     let active = true
@@ -49,6 +52,44 @@ export default function SchoolDashboard() {
     }
   }, [token])
 
+  useEffect(() => {
+    let active = true
+
+    if (!code) {
+      setStudents([])
+      setLoadingStudents(false)
+      setStudentsError('')
+      return () => {
+        active = false
+      }
+    }
+
+    setLoadingStudents(true)
+    setStudentsError('')
+
+    fetchStudentsBySchool(code)
+      .then((res) => {
+        if (!active) return
+        setStudents(Array.isArray(res?.records) ? res.records : [])
+      })
+      .catch((error) => {
+        console.error('Unable to fetch students', error)
+        if (!active) return
+        const message = error?.message || 'Impossibile recuperare gli studenti.'
+        setStudentsError(message)
+        setStudents([])
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingStudents(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [code])
+
   async function handleCopy() {
     if (!code) return
     try {
@@ -74,9 +115,9 @@ export default function SchoolDashboard() {
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
           <h1 className="text-3xl font-semibold text-binavy dark:text-white">Area Scuola</h1>
           <p className="mt-3 text-slate-600 dark:text-slate-300">
-          {schoolName
-            ? `Benvenuto ${schoolName}! Qui puoi gestire il Codice Scuola da condividere con gli studenti.`
-            : 'Benvenuto nella dashboard della tua scuola. Qui troverai materiali e potrai gestire il tuo Codice Scuola.'}
+            {schoolName
+              ? `Benvenuto ${schoolName}! Qui puoi gestire il Codice Scuola da condividere con gli studenti.`
+              : 'Benvenuto nella dashboard della tua scuola. Qui troverai materiali e potrai gestire il tuo Codice Scuola.'}
           </p>
           <div className="mt-6 inline-flex items-center gap-2 text-sm text-binavy dark:text-slate-200">
             <span>Vuoi uscire?</span>
@@ -122,6 +163,56 @@ export default function SchoolDashboard() {
             <p className="mt-3 text-sm text-emerald-600 dark:text-emerald-300" aria-live="polite">
               {copyMessage}
             </p>
+          )}
+        </div>
+
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">I miei studenti</h2>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+            Elenco studenti registrati con il tuo Codice Scuola.
+          </p>
+
+          {studentsError && (
+            <div
+              role="alert"
+              className="mt-5 rounded-2xl border border-bireg/20 bg-bireg/10 px-4 py-3 text-sm text-bireg"
+            >
+              {studentsError}
+            </div>
+          )}
+
+          {loadingStudents && !studentsError && (
+            <p className="mt-6 text-sm text-slate-500">Caricamento studenti...</p>
+          )}
+
+          {!loadingStudents && !studentsError && students.length === 0 && (
+            <p className="mt-6 text-sm text-slate-500">Nessuno studente registrato al momento.</p>
+          )}
+
+          {!loadingStudents && students.length > 0 && (
+            <div className="mt-6 overflow-x-auto">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-slate-700">
+                    <th className="py-2 px-3 font-semibold text-slate-700 dark:text-slate-200">Nome</th>
+                    <th className="py-2 px-3 font-semibold text-slate-700 dark:text-slate-200">Email</th>
+                    <th className="py-2 px-3 font-semibold text-slate-700 dark:text-slate-200">Data registrazione</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((st) => (
+                    <tr
+                      key={st.id}
+                      className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                    >
+                      <td className="py-2 px-3 text-slate-700 dark:text-slate-200">{st.name}</td>
+                      <td className="py-2 px-3 text-slate-700 dark:text-slate-200">{st.email}</td>
+                      <td className="py-2 px-3 text-slate-600 dark:text-slate-400">{st.createdAt}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

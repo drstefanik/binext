@@ -172,3 +172,19 @@ export function buildAuthHeaders(headers = {}) {
 export async function fetchSchoolCode() {
   return request('/school/code', { method: 'GET', withAuth: true })
 }
+
+export async function fetchStudentsBySchool(code) {
+  if (!code) {
+    throw new Error('Codice scuola mancante')
+  }
+
+  return request(`/get-students-by-school?code=${encodeURIComponent(code)}`)
+}
+
+export async function fetchSchoolByCode(code) {
+  if (!code) {
+    throw new Error('Codice scuola mancante')
+  }
+
+  return request(`/get-school-by-code?code=${encodeURIComponent(code)}`)
+}
