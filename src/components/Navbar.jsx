@@ -1,38 +1,121 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import ThemeToggle from './ThemeToggle'
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ChevronDown, LayoutDashboard } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+import { getStoredSession, getDashboardPath } from "../api";
 
-export default function Navbar(){
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [session, setSession] = useState(null);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Carica sessione
+  useEffect(() => {
+    const s = getStoredSession?.();
+    setSession(s || null);
+  }, []);
+
+  // Chiudi dropdown al click fuori
+  useEffect(() => {
+    function onClickOutside(e) {
+      if (open && menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
+
+  const handleDashboard = () => {
+    try {
+      const path = getDashboardPath?.(session?.role) || "/dashboard";
+      navigate(path);
+    } catch {
+      navigate("/dashboard");
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-binavy/10 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-[#0a0f1f]/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <Link to="/" className="text-lg font-semibold tracking-wide text-binavy transition hover:text-bireg dark:text-white">
+    <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur dark:bg-slate-900/70">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+        {/* Logo / Brand */}
+        <Link
+          to="/"
+          className="font-semibold tracking-wide text-[#00247D] dark:text-white"
+        >
           BI NEXT
         </Link>
-        <nav className="flex items-center gap-3">
-          <Link
-            to="/login"
-            className="rounded-full border border-binavy/30 bg-white/90 px-4 py-2 text-sm font-medium text-binavy shadow-sm transition hover:border-binavy hover:bg-biwhite focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:bg-[#152044] dark:text-slate-100 dark:hover:bg-[#001c5e] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup-student"
-            className="rounded-full border border-binavy/30 bg-white/90 px-4 py-2 text-sm font-medium text-binavy shadow-sm transition hover:border-binavy hover:bg-biwhite focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:bg-[#152044] dark:text-slate-100 dark:hover:bg-[#001c5e] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
-          >
-            Signup Studente
-          </Link>
-          <Link
-            to="/signup-school"
-            className="rounded-full bg-binavy px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-[#16348f] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
-          >
-            Signup Scuola
-          </Link>
-          <div className="ml-2">
-            <ThemeToggle />
-          </div>
-        </nav>
+
+        {/* Azioni destra */}
+        <div className="flex items-center gap-2">
+          {/* Se loggato: mostra pulsante Dashboard */}
+          {session ? (
+            <button
+              type="button"
+              onClick={handleDashboard}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#00247D] px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 dark:focus-visible:ring-white/60"
+            >
+              <LayoutDashboard size={18} />
+              Dashboard
+            </button>
+          ) : (
+            /* Se NON loggato: mostra dropdown Signup/Login */
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setOpen((v) => !v)}
+                aria-haspopup="menu"
+                aria-expanded={open}
+                className="inline-flex items-center gap-1 rounded-xl border px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 dark:border-white/10 dark:text-slate-100 dark:hover:bg-slate-800"
+              >
+                Accedi / Iscriviti
+                <ChevronDown
+                  className={`transition-transform ${open ? "rotate-180" : ""}`}
+                  size={16}
+                />
+              </button>
+
+              {/* Menu */}
+              {open && (
+                <div
+                  role="menu"
+                  aria-label="Menu accesso"
+                  className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl dark:border-white/10 dark:bg-slate-900/90"
+                >
+                  <Link
+                    to="/signup-school"
+                    role="menuitem"
+                    className="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    Signup Scuola
+                  </Link>
+                  <Link
+                    to="/signup-student"
+                    role="menuitem"
+                    className="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    Signup Studente
+                  </Link>
+                  <Link
+                    to="/login"
+                    role="menuitem"
+                    className="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    Login
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Toggle Tema */}
+          <ThemeToggle />
+        </div>
       </div>
     </header>
-  )
+  );
 }
