@@ -44,10 +44,10 @@ function FolderNode({ node, depth, onSelect, selectedId }) {
       <button
         type="button"
         onClick={() => onSelect(node.id)}
-        className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+        className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0a0f1f] ${
           isActive
-            ? 'bg-binavy text-white focus:ring-binavy'
-            : 'text-slate-600 hover:bg-slate-100 focus:ring-slate-300'
+            ? 'bg-binavy text-white focus-visible:ring-bireg dark:bg-[#001c5e]'
+            : 'text-slate-600 hover:bg-biwhite focus-visible:ring-binavy/40 dark:text-slate-300 dark:hover:bg-[#111a33] dark:focus-visible:ring-[#6a87ff]/60'
         }`}
         style={{ paddingLeft: `${depth * 16 + 12}px` }}
       >
@@ -81,12 +81,12 @@ function Toast({ toast, onClose }) {
 
   if (!toast) return null
 
-  const toneClass = toast.tone === 'error' ? 'bg-red-600' : 'bg-emerald-600'
+  const toneClass = toast.tone === 'error' ? 'bg-bireg' : 'bg-emerald-600'
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-4 flex justify-center px-4">
       <div
-        className={`pointer-events-auto flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white shadow-lg ${toneClass}`}
+        className={`pointer-events-auto flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white shadow-soft ${toneClass}`}
       >
         <span>{toast.message}</span>
       </div>
@@ -285,138 +285,140 @@ export default function StudentDashboard() {
   const closeToast = useCallback(() => setToast(null), [])
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-biwhite via-biwhite to-binavy/10 dark:from-[#0a0f1f] dark:via-[#0a0f1f] dark:to-[#001c5e]">
       <Toast toast={toast} onClose={closeToast} />
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Area Studente</h1>
-        <p className="mt-3 text-slate-600 dark:text-slate-300">
-          {studentName
-            ? `Ciao ${studentName}, esplora i materiali condivisi con te dalla tua scuola.`
-            : 'Accedi ai materiali condivisi con gli studenti della tua scuola.'}
-        </p>
-        <div className="mt-6 inline-flex items-center gap-2 text-sm text-binavy">
-          <span>Vuoi uscire?</span>
-          <Link to="/logout" className="font-semibold underline">
-            Logout
-          </Link>
-        </div>
-      </div>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-[260px,1fr]">
-        <aside className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
-          <h2 className="px-2 text-sm font-semibold uppercase tracking-wider text-slate-500">
-            Cartelle
-          </h2>
-          {loading ? (
-            <div className="mt-4 space-y-2 px-2">
-              {[0, 1, 2, 3].map((index) => (
-                <div key={index} className="h-10 w-full animate-pulse rounded-xl bg-slate-100" />
-              ))}
-            </div>
-          ) : folders.length === 0 ? (
-            <p className="mt-4 px-2 text-sm text-slate-500">
-              Nessuna cartella disponibile al momento.
-            </p>
-          ) : (
-            <div className="mt-3 space-y-1">
-              {tree.map((node) => (
-                <FolderNode
-                  key={node.id}
-                  node={node}
-                  depth={0}
-                  onSelect={selectFolder}
-                  selectedId={selectedFolderId}
-                />
-              ))}
-            </div>
-          )}
-        </aside>
-
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
-          <div className="flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <nav className="flex flex-wrap items-center gap-2 text-sm text-slate-500" aria-label="Percorso cartella">
-                {breadcrumb.length === 0 ? (
-                  <span className="font-medium text-slate-700">Seleziona una cartella</span>
-                ) : (
-                  breadcrumb.map((folder, index) => (
-                    <React.Fragment key={folder.id}>
-                      <button
-                        type="button"
-                        onClick={() => selectFolder(folder.id)}
-                        className={`rounded-md px-2 py-1 transition ${
-                          index === breadcrumb.length - 1
-                            ? 'bg-binavy text-white'
-                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                        }`}
-                      >
-                        {folder.name || 'Cartella'}
-                      </button>
-                      {index !== breadcrumb.length - 1 && <span className="text-slate-300">/</span>}
-                    </React.Fragment>
-                  ))
-                )}
-              </nav>
-              {selectedFolderId && folderMap.get(selectedFolderId)?.description && (
-                <p className="mt-2 text-sm text-slate-500">
-                  {folderMap.get(selectedFolderId).description}
-                </p>
-              )}
-            </div>
-            <div className="text-xs uppercase tracking-widest text-slate-400">
-              {filteredFiles.length}{' '}
-              {filteredFiles.length === 1 ? 'file disponibile' : 'file disponibili'}
-            </div>
+      <div className="mx-auto max-w-6xl px-4 py-12">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+          <h1 className="text-3xl font-semibold text-binavy dark:text-white">Area Studente</h1>
+          <p className="mt-3 text-slate-600 dark:text-slate-300">
+            {studentName
+              ? `Ciao ${studentName}, esplora i materiali condivisi con te dalla tua scuola.`
+              : 'Accedi ai materiali condivisi con gli studenti della tua scuola.'}
+          </p>
+          <div className="mt-6 inline-flex items-center gap-2 text-sm text-binavy dark:text-slate-200">
+            <span>Vuoi uscire?</span>
+            <Link to="/logout" className="font-semibold text-binavy underline-offset-4 hover:text-bireg dark:text-white dark:hover:text-bireg">
+              Logout
+            </Link>
           </div>
+        </div>
 
-          {error && !loading ? (
-            <div
-              role="alert"
-              className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-            >
-              {error}
+        <div className="mt-8 grid gap-6 lg:grid-cols-[260px,1fr]">
+          <aside className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+            <h2 className="px-2 text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-300">
+              Cartelle
+            </h2>
+            {loading ? (
+              <div className="mt-4 space-y-2 px-2">
+                {[0, 1, 2, 3].map((index) => (
+                  <div key={index} className="h-10 w-full animate-pulse rounded-xl bg-binavy/10 dark:bg-white/10" />
+                ))}
+              </div>
+            ) : folders.length === 0 ? (
+              <p className="mt-4 px-2 text-sm text-slate-600 dark:text-slate-400">
+                Nessuna cartella disponibile al momento.
+              </p>
+            ) : (
+              <div className="mt-3 space-y-1">
+                {tree.map((node) => (
+                  <FolderNode
+                    key={node.id}
+                    node={node}
+                    depth={0}
+                    onSelect={selectFolder}
+                    selectedId={selectedFolderId}
+                  />
+                ))}
+              </div>
+            )}
+          </aside>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+            <div className="flex flex-col gap-4 border-b border-slate-100 pb-5 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <nav className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-300" aria-label="Percorso cartella">
+                  {breadcrumb.length === 0 ? (
+                    <span className="font-medium text-slate-700 dark:text-slate-200">Seleziona una cartella</span>
+                  ) : (
+                    breadcrumb.map((folder, index) => (
+                      <React.Fragment key={folder.id}>
+                        <button
+                          type="button"
+                          onClick={() => selectFolder(folder.id)}
+                          className={`rounded-full px-3 py-1 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0a0f1f] ${
+                            index === breadcrumb.length - 1
+                              ? 'bg-binavy text-white focus-visible:ring-bireg'
+                              : 'bg-biwhite text-binavy hover:bg-binavy/10 focus-visible:ring-binavy/40 dark:bg-[#111a33] dark:text-slate-200 dark:hover:bg-[#1a2750] dark:focus-visible:ring-[#6a87ff]/60'
+                          }`}
+                        >
+                          {folder.name || 'Cartella'}
+                        </button>
+                        {index !== breadcrumb.length - 1 && <span className="text-slate-300 dark:text-slate-600">/</span>}
+                      </React.Fragment>
+                    ))
+                  )}
+                </nav>
+                {selectedFolderId && folderMap.get(selectedFolderId)?.description && (
+                  <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                    {folderMap.get(selectedFolderId).description}
+                  </p>
+                )}
+              </div>
+              <div className="text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                {filteredFiles.length}{' '}
+                {filteredFiles.length === 1 ? 'file disponibile' : 'file disponibili'}
+              </div>
             </div>
-          ) : loading ? (
-            <div className="mt-6 space-y-4">
-              {[0, 1, 2].map((index) => (
-                <div
-                  key={index}
-                  className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 animate-pulse rounded-lg bg-slate-200" />
-                    <div className="space-y-2">
-                      <div className="h-4 w-40 animate-pulse rounded bg-slate-200" />
-                      <div className="h-3 w-24 animate-pulse rounded bg-slate-200" />
+
+            {error && !loading ? (
+              <div
+                role="alert"
+                className="mt-6 rounded-2xl border border-bireg/20 bg-bireg/10 px-4 py-3 text-sm text-bireg"
+              >
+                {error}
+              </div>
+            ) : loading ? (
+              <div className="mt-6 space-y-4">
+                {[0, 1, 2].map((index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-binavy/5 p-4 dark:border-white/10 dark:bg-[#111a33] sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 animate-pulse rounded-lg bg-binavy/20 dark:bg-white/10" />
+                      <div className="space-y-2">
+                        <div className="h-4 w-40 animate-pulse rounded bg-binavy/20 dark:bg-white/10" />
+                        <div className="h-3 w-24 animate-pulse rounded bg-binavy/20 dark:bg-white/10" />
+                      </div>
+                    </div>
+                    <div className="flex w-full max-w-[180px] items-center gap-2 sm:w-auto">
+                      <div className="h-8 flex-1 animate-pulse rounded-lg bg-binavy/20 dark:bg-white/10" />
+                      <div className="h-8 flex-1 animate-pulse rounded-lg bg-binavy/20 dark:bg-white/10" />
                     </div>
                   </div>
-                  <div className="flex w-full max-w-[180px] items-center gap-2 sm:w-auto">
-                    <div className="h-8 flex-1 animate-pulse rounded-lg bg-slate-200" />
-                    <div className="h-8 flex-1 animate-pulse rounded-lg bg-slate-200" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : !selectedFolderId ? (
-            <p className="mt-6 text-sm text-slate-500">
-              Seleziona una cartella dalla barra laterale per vedere i file disponibili.
-            </p>
-          ) : filteredFiles.length === 0 ? (
-            <p className="mt-6 text-sm text-slate-500">Nessun file disponibile in questa cartella.</p>
-          ) : (
-            <ul className="mt-6 space-y-4">
-              {filteredFiles.map((file) => (
-                <FileListItem
-                  key={file.id}
-                  file={file}
-                  onOpen={() => handleOpenFile(file.url)}
-                  onCopy={() => handleCopyLink(file)}
-                  isCopied={copiedFileId === file.id}
-                />
-              ))}
-            </ul>
-          )}
-        </section>
+                ))}
+              </div>
+            ) : !selectedFolderId ? (
+              <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
+                Seleziona una cartella dalla barra laterale per vedere i file disponibili.
+              </p>
+            ) : filteredFiles.length === 0 ? (
+              <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">Nessun file disponibile in questa cartella.</p>
+            ) : (
+              <ul className="mt-6 space-y-4">
+                {filteredFiles.map((file) => (
+                  <FileListItem
+                    key={file.id}
+                    file={file}
+                    onOpen={() => handleOpenFile(file.url)}
+                    onCopy={() => handleCopyLink(file)}
+                    isCopied={copiedFileId === file.id}
+                  />
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   )

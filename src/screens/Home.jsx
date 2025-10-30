@@ -15,14 +15,13 @@ const card = (d = 0) => ({
 
 export default function Home() {
   return (
-    <main className="relative overflow-hidden text-center">
-      {/* === SFONDO === */}
-      <div className="absolute inset-0 -z-30 bg-gradient-to-br from-[#00247D] via-white to-[#CF142B] dark:from-[#0b1a4a] dark:via-[#0a0f1f] dark:to-[#7a0b18] animate-gradient-x"></div>
-      {/* Vignettatura per contrasto */}
-      <div className="absolute inset-0 -z-25 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_60%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0)_60%)]"></div>
-      <div className="absolute inset-0 -z-20 bg-network bg-cover bg-center opacity-40 dark:opacity-30"></div>
-      <div className="absolute inset-0 -z-10">
-        <Particles density={100} />
+    <main className="relative overflow-hidden bg-gradient-to-b from-biwhite via-biwhite to-binavy/10 text-center dark:from-[#0a0f1f] dark:via-[#0a0f1f] dark:to-[#001c5e]">
+      {/* === SFONDI === */}
+      <div className="pointer-events-none absolute inset-0 -z-30 animate-gradient-x bg-gradient-to-r from-binavy via-biwhite to-bireg bg-[length:200%_200%] opacity-80 dark:from-[#001c5e] dark:via-[#0a0f1f] dark:to-[#7a0b18] dark:opacity-60" />
+      <div className="absolute inset-0 -z-20 bg-hero-gradient" />
+      <div className="absolute inset-0 -z-10 bg-network bg-cover bg-center opacity-[0.18] dark:opacity-[0.12]" />
+      <div className="absolute inset-0 -z-5">
+        <Particles density={110} />
       </div>
 
       {/* === HERO === */}
@@ -31,7 +30,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col items-center gap-4"
+          className="flex w-full max-w-4xl flex-col items-center gap-6 rounded-3xl border border-slate-200 bg-white/80 p-10 text-center shadow-sm shadow-soft backdrop-blur dark:border-white/10 dark:bg-[#0a0f1f]/70"
         >
           {nextLogo && (
             <motion.img
@@ -42,36 +41,33 @@ export default function Home() {
             />
           )}
 
-          {/* payoff */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.35, duration: 0.6 }}
-            className="inline-flex items-center rounded-full bg-white/90 px-4 py-1 text-sm font-semibold text-[#00247D] shadow dark:bg-white/80 dark:text-[#dbe7ff] md:text-base"
+            className="inline-flex items-center rounded-full border border-binavy/20 bg-binavy/10 px-4 py-1 text-sm font-semibold text-binavy shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white md:text-base"
           >
             Native English eXperience Test
           </motion.div>
 
-          <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-white [text-shadow:_0_4px_14px_rgba(0,0,0,.35)] md:text-5xl">
-            Il programma di certificazione orizzontale per tutti gli studenti
-            della scuola pubblica italiana
+          <h1 className="max-w-3xl text-3xl font-semibold leading-tight text-binavy md:text-5xl dark:text-white">
+            Il programma di certificazione orizzontale per tutti gli studenti della scuola pubblica italiana
           </h1>
 
-          <p className="mt-4 max-w-2xl text-white/95 [text-shadow:_0_2px_8px_rgba(0,0,0,.25)] dark:text-white/90">
-            Materiali ufficiali sempre aggiornati, area download dedicata alla
-            tua sede e registrazione studenti con Codice Scuola.
+          <p className="max-w-2xl text-base text-slate-600 dark:text-slate-300">
+            Materiali ufficiali sempre aggiornati, area download dedicata alla tua sede e registrazione studenti con Codice Scuola.
           </p>
 
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Link
               to="/signup-school"
-              className="rounded-2xl bg-[#00247D] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 dark:focus-visible:ring-white/60"
+              className="rounded-full bg-binavy px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-[#16348f] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
             >
               Registra la tua scuola
             </Link>
             <Link
               to="/signup-student"
-              className="rounded-2xl bg-white px-6 py-3 font-medium text-[#00247D] shadow-md transition-all hover:bg-white/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 dark:bg-slate-100 dark:text-[#001c5e] dark:hover:bg-slate-200"
+              className="rounded-full border border-binavy/30 bg-white px-6 py-3 text-sm font-semibold text-binavy shadow-sm transition hover:border-binavy hover:bg-biwhite focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:bg-[#152044] dark:text-white dark:hover:bg-[#001c5e] dark:focus-visible:ring-[#6a87ff] dark:focus-visible:ring-offset-[#0a0f1f]"
             >
               Sono uno studente
             </Link>
@@ -83,19 +79,19 @@ export default function Home() {
       <section className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 pb-20 md:grid-cols-2">
         <motion.div
           {...card(0.1)}
-          className="rounded-3xl border border-[#00247D]/15 bg-white/95 p-6 shadow-lg backdrop-blur transition-shadow hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+          className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm shadow-soft transition-shadow hover:shadow-lg dark:border-white/10 dark:bg-slate-900/70"
         >
-          <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-50">
+          <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-binavy/5 dark:bg-white/10">
             <img src={logoBI} alt="British Institutes" className="h-full w-full object-contain p-6" />
           </div>
           <div className="mt-5">
-            <h3 className="mb-2 text-xl font-semibold text-[#00247D] dark:text-white">Scuola</h3>
+            <h3 className="mb-2 text-xl font-semibold text-binavy dark:text-white">Scuola</h3>
             <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
               Spazio riservato alla sede per condividere i materiali con le proprie classi.
             </p>
             <Link
               to="/signup-school"
-              className="rounded text-[#CF142B] font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#CF142B]/30 dark:text-[#ff7a88] dark:focus-visible:ring-white/20"
+              className="inline-flex items-center text-sm font-semibold text-bireg transition hover:text-bireg/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-[#ff7a88] dark:focus-visible:ring-white/20 dark:focus-visible:ring-offset-[#0a0f1f]"
             >
               Vai →
             </Link>
@@ -104,19 +100,19 @@ export default function Home() {
 
         <motion.div
           {...card(0.2)}
-          className="rounded-3xl border border-[#00247D]/15 bg-white/95 p-6 shadow-lg backdrop-blur transition-shadow hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+          className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm shadow-soft transition-shadow hover:shadow-lg dark:border-white/10 dark:bg-slate-900/70"
         >
-          <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-50">
+          <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-binavy/5 dark:bg-white/10">
             <img src={illStudent} alt="Studente" className="h-full w-full object-contain p-6" />
           </div>
           <div className="mt-5">
-            <h3 className="mb-2 text-xl font-semibold text-[#00247D] dark:text-white">Studente</h3>
+            <h3 className="mb-2 text-xl font-semibold text-binavy dark:text-white">Studente</h3>
             <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
               Registrati con il Codice Scuola e accedi ai download della tua sede.
             </p>
             <Link
               to="/signup-student"
-              className="rounded text-[#CF142B] font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#CF142B]/30 dark:text-[#ff7a88] dark:focus-visible:ring-white/20"
+              className="inline-flex items-center text-sm font-semibold text-bireg transition hover:text-bireg/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-bireg/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-[#ff7a88] dark:focus-visible:ring-white/20 dark:focus-visible:ring-offset-[#0a0f1f]"
             >
               Vai →
             </Link>
