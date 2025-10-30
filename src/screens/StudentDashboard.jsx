@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getStoredSession } from '../api'
+import FileListItem from '../components/FileListItem'
 
 const API_BASE = import.meta.env.VITE_AUTH_API ?? '/api'
 
@@ -34,47 +35,6 @@ function buildTree(folders) {
 
   sortNodes(roots)
   return roots
-}
-
-function detectFileType(file) {
-  const type = (file?.type || '').toLowerCase()
-  if (type) return type
-  const url = file?.url || ''
-  if (!url) return 'file'
-  if (url.includes('youtube.com') || url.includes('youtu.be')) return 'video'
-  const extensionMatch = url.match(/\.([a-z0-9]+)(?:\?|#|$)/i)
-  if (extensionMatch) {
-    const ext = extensionMatch[1].toLowerCase()
-    if (ext === 'pdf') return 'pdf'
-    if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return 'image'
-    if (['ppt', 'pptx', 'key'].includes(ext)) return 'slides'
-    if (['doc', 'docx', 'pages', 'rtf'].includes(ext)) return 'doc'
-    if (['xls', 'xlsx', 'numbers', 'csv'].includes(ext)) return 'sheet'
-  }
-  return 'file'
-}
-
-const FILE_TYPE_META = {
-  pdf: { label: 'PDF', badgeClass: 'bg-red-100 text-red-600 border-red-200', icon: '📄' },
-  image: { label: 'Immagine', badgeClass: 'bg-orange-100 text-orange-600 border-orange-200', icon: '🖼️' },
-  video: { label: 'Video', badgeClass: 'bg-purple-100 text-purple-600 border-purple-200', icon: '🎬' },
-  slides: { label: 'Slides', badgeClass: 'bg-blue-100 text-blue-600 border-blue-200', icon: '📊' },
-  doc: { label: 'Documento', badgeClass: 'bg-emerald-100 text-emerald-600 border-emerald-200', icon: '📝' },
-  sheet: { label: 'Foglio', badgeClass: 'bg-sky-100 text-sky-600 border-sky-200', icon: '📈' },
-  file: { label: 'File', badgeClass: 'bg-slate-100 text-slate-600 border-slate-200', icon: '📁' },
-}
-
-function FileBadge({ file }) {
-  const type = detectFileType(file)
-  const meta = FILE_TYPE_META[type] ?? FILE_TYPE_META.file
-  return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${meta.badgeClass}`}
-    >
-      <span>{meta.icon}</span>
-      <span>{meta.label}</span>
-    </span>
-  )
 }
 
 function FolderNode({ node, depth, onSelect, selectedId }) {
@@ -114,7 +74,8 @@ function FolderNode({ node, depth, onSelect, selectedId }) {
 function Toast({ toast, onClose }) {
   useEffect(() => {
     if (!toast) return
-    const timeout = setTimeout(onClose, 4000)
+    const duration = typeof toast.duration === 'number' ? toast.duration : 4000
+    const timeout = setTimeout(onClose, duration)
     return () => clearTimeout(timeout)
   }, [toast, onClose])
 
@@ -144,6 +105,8 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [toast, setToast] = useState(null)
+  const [copiedFileId, setCopiedFileId] = useState(null)
+  const copyTimeoutRef = useRef(null)
 
   const folderMap = useMemo(() => {
     const map = new Map()
@@ -174,9 +137,9 @@ export default function StudentDashboard() {
     return files
       .filter((file) => file.folder === selectedFolderId)
       .sort((a, b) => {
-        const orderDiff = (a.order ?? 0) - (b.order ?? 0)
+        const orderDiff = (a.order ?? 999) - (b.order ?? 999)
         if (orderDiff !== 0) return orderDiff
-        return (a.name || '').localeCompare(b.name || '')
+        return (a.title || '').localeCompare(b.title || '')
       })
   }, [files, selectedFolderId])
 
@@ -283,20 +246,41 @@ export default function StudentDashboard() {
     })
   }, [folders])
 
-  const handleCopyLink = useCallback(async (url) => {
-    if (!url) return
-    try {
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url)
-        setToast({ message: 'Link copiato negli appunti!', tone: 'success' })
-      } else {
-        throw new Error('Clipboard API non disponibile')
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current)
       }
-    } catch (error) {
-      console.error('Copy file link failed', error)
-      setToast({ message: 'Impossibile copiare il link. Copia manualmente.', tone: 'error' })
     }
   }, [])
+
+  const handleOpenFile = useCallback((url) => {
+    if (!url) return
+    window.open(url, '_blank', 'noopener')
+  }, [])
+
+  const handleCopyLink = useCallback(
+    async (file) => {
+      const url = file?.url
+      if (!url) return
+      try {
+        if (navigator?.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url)
+          if (copyTimeoutRef.current) {
+            clearTimeout(copyTimeoutRef.current)
+          }
+          setCopiedFileId(file.id)
+          copyTimeoutRef.current = setTimeout(() => setCopiedFileId(null), 1500)
+        } else {
+          throw new Error('Clipboard API non disponibile')
+        }
+      } catch (error) {
+        console.error('Copy file link failed', error)
+        setToast({ message: 'Impossibile copiare il link. Copia manualmente.', tone: 'error', duration: 4000 })
+      }
+    },
+    [],
+  )
 
   const closeToast = useCallback(() => setToast(null), [])
 
@@ -324,7 +308,11 @@ export default function StudentDashboard() {
             Cartelle
           </h2>
           {loading ? (
-            <p className="mt-4 px-2 text-sm text-slate-500">Caricamento cartelle…</p>
+            <div className="mt-4 space-y-2 px-2">
+              {[0, 1, 2, 3].map((index) => (
+                <div key={index} className="h-10 w-full animate-pulse rounded-xl bg-slate-100" />
+              ))}
+            </div>
           ) : folders.length === 0 ? (
             <p className="mt-4 px-2 text-sm text-slate-500">
               Nessuna cartella disponibile al momento.
@@ -389,60 +377,43 @@ export default function StudentDashboard() {
               {error}
             </div>
           ) : loading ? (
-            <div className="mt-6 space-y-3">
-              <div className="h-4 w-1/2 animate-pulse rounded bg-slate-200" />
-              <div className="h-20 animate-pulse rounded-2xl bg-slate-100" />
-              <div className="h-20 animate-pulse rounded-2xl bg-slate-100" />
+            <div className="mt-6 space-y-4">
+              {[0, 1, 2].map((index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 animate-pulse rounded-lg bg-slate-200" />
+                    <div className="space-y-2">
+                      <div className="h-4 w-40 animate-pulse rounded bg-slate-200" />
+                      <div className="h-3 w-24 animate-pulse rounded bg-slate-200" />
+                    </div>
+                  </div>
+                  <div className="flex w-full max-w-[180px] items-center gap-2 sm:w-auto">
+                    <div className="h-8 flex-1 animate-pulse rounded-lg bg-slate-200" />
+                    <div className="h-8 flex-1 animate-pulse rounded-lg bg-slate-200" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : !selectedFolderId ? (
             <p className="mt-6 text-sm text-slate-500">
               Seleziona una cartella dalla barra laterale per vedere i file disponibili.
             </p>
           ) : filteredFiles.length === 0 ? (
-            <p className="mt-6 text-sm text-slate-500">
-              Nessun file presente in questa cartella. Torna più tardi!
-            </p>
+            <p className="mt-6 text-sm text-slate-500">Nessun file disponibile in questa cartella.</p>
           ) : (
             <ul className="mt-6 space-y-4">
-              {filteredFiles.map((file) => {
-                const meta = FILE_TYPE_META[detectFileType(file)] ?? FILE_TYPE_META.file
-                return (
-                  <li
-                    key={file.id}
-                    className="flex flex-col gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4 transition hover:border-slate-200 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="flex flex-1 items-start gap-4">
-                      <div className="mt-1 text-2xl" aria-hidden="true">
-                        {meta.icon}
-                      </div>
-                      <div>
-                        <p className="text-base font-semibold text-slate-900">{file.name || 'File senza nome'}</p>
-                        {file.description && <p className="mt-1 text-sm text-slate-500">{file.description}</p>}
-                        <div className="mt-2">
-                          <FileBadge file={file} />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-                      <a
-                        href={file.url || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center rounded-xl bg-binavy px-4 py-2 text-sm font-semibold text-white transition hover:bg-binavy/90 focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        Apri
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => handleCopyLink(file.url)}
-                        className="inline-flex items-center justify-center rounded-xl border border-binavy px-4 py-2 text-sm font-semibold text-binavy transition hover:bg-binavy/10 focus:outline-none focus:ring-2 focus:ring-binavy focus:ring-offset-2"
-                      >
-                        Copia link
-                      </button>
-                    </div>
-                  </li>
-                )
-              })}
+              {filteredFiles.map((file) => (
+                <FileListItem
+                  key={file.id}
+                  file={file}
+                  onOpen={() => handleOpenFile(file.url)}
+                  onCopy={() => handleCopyLink(file)}
+                  isCopied={copiedFileId === file.id}
+                />
+              ))}
             </ul>
           )}
         </section>
