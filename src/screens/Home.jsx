@@ -17,7 +17,9 @@ export default function Home() {
   return (
     <main className="relative overflow-hidden text-center">
       {/* === SFONDO === */}
-      <div className="absolute inset-0 -z-30 bg-gradient-to-br from-[#00247D] via-[#ffffff] to-[#CF142B] animate-gradient-x"></div>
+      <div className="absolute inset-0 -z-30 bg-gradient-to-br from-[#00247D] via-white to-[#CF142B] animate-gradient-x"></div>
+      {/* Vignettatura per contrasto */}
+      <div className="absolute inset-0 -z-25 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_60%)]"></div>
       <div className="absolute inset-0 -z-20 bg-network bg-cover bg-center opacity-40"></div>
       <div className="absolute inset-0 -z-10">
         <Particles density={100} />
@@ -42,23 +44,23 @@ export default function Home() {
           )}
 
           {/* SOTTOTITOLO - SIGNIFICATO */}
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-lg md:text-xl font-medium bg-gradient-to-r from-[#00247D] via-[#CF142B] to-[#00247D] bg-clip-text text-transparent tracking-wide"
+            transition={{ delay: 0.35, duration: 0.6 }}
+            className="inline-flex items-center rounded-full bg-white/90 px-4 py-1 text-sm md:text-base font-semibold text-[#00247D] shadow"
           >
             Native English eXperience Test
-          </motion.p>
+          </motion.div>
 
           {/* TITOLO PRINCIPALE */}
-          <h1 className="text-3xl md:text-5xl font-semibold leading-tight text-white drop-shadow-lg max-w-4xl">
+          <h1 className="text-3xl md:text-5xl font-semibold leading-tight text-white text-shadow-lg max-w-4xl">
             Il programma di certificazione orizzontale per tutti gli studenti
             della scuola pubblica italiana
           </h1>
 
           {/* DESCRIZIONE */}
-          <p className="max-w-2xl text-white/90 mt-4">
+          <p className="max-w-2xl text-white/95 mt-4 text-shadow">
             Materiali ufficiali sempre aggiornati, area download dedicata alla
             tua sede e registrazione studenti con Codice Scuola.
           </p>
@@ -67,13 +69,13 @@ export default function Home() {
           <div className="flex flex-wrap gap-3 justify-center mt-6">
             <Link
               to="/signup-school"
-              className="px-6 py-3 rounded-2xl bg-[#00247D] text-white font-medium shadow-md hover:bg-[#001c5e] transition-all"
+              className="px-6 py-3 rounded-2xl bg-[#00247D] text-white font-medium shadow-md hover:bg-[#001c5e] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 transition-all"
             >
               Registra la tua scuola
             </Link>
             <Link
               to="/signup-student"
-              className="px-6 py-3 rounded-2xl border-2 border-white text-white font-medium hover:bg-white hover:text-[#00247D] transition-all"
+              className="px-6 py-3 rounded-2xl bg-white text-[#00247D] font-medium shadow-md hover:bg-white/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 transition-all"
             >
               Sono uno studente
             </Link>
@@ -85,7 +87,7 @@ export default function Home() {
       <section className="relative z-10 mx-auto max-w-7xl px-4 pb-20 grid md:grid-cols-2 gap-8">
         <motion.div
           {...card(0.1)}
-          className="rounded-3xl bg-white/90 backdrop-blur-lg border border-[#00247D]/20 p-6 shadow-lg hover:shadow-xl transition-shadow"
+          className="rounded-3xl bg-white/95 backdrop-blur border border-[#00247D]/15 p-6 shadow-lg hover:shadow-xl transition-shadow"
         >
           <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-50">
             <img
@@ -104,7 +106,7 @@ export default function Home() {
             </p>
             <Link
               to="/signup-school"
-              className="text-[#CF142B] font-medium hover:underline"
+              className="text-[#CF142B] font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#CF142B]/30 rounded"
             >
               Vai →
             </Link>
@@ -113,7 +115,7 @@ export default function Home() {
 
         <motion.div
           {...card(0.2)}
-          className="rounded-3xl bg-white/90 backdrop-blur-lg border border-[#00247D]/20 p-6 shadow-lg hover:shadow-xl transition-shadow"
+          className="rounded-3xl bg-white/95 backdrop-blur border border-[#00247D]/15 p-6 shadow-lg hover:shadow-xl transition-shadow"
         >
           <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-slate-50">
             <img
@@ -132,7 +134,7 @@ export default function Home() {
             </p>
             <Link
               to="/signup-student"
-              className="text-[#CF142B] font-medium hover:underline"
+              className="text-[#CF142B] font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#CF142B]/30 rounded"
             >
               Vai →
             </Link>
